@@ -40,7 +40,8 @@ export default function page() {
   const { data: notificationDeliveryData }: any = useSWR("/api/notifications/delivery", () => restClient.getNotificationDeliveryStats())
   const { data: subscribersData }: any = useSWR("/api/notifications/stats/subscriptions", () => restClient.getNotificationSubscriptionStats())
   console.log(notificationDeliveryData);
-  
+   
+ 
   return (
     <Container size="xl">
       <Notifications />
@@ -68,12 +69,11 @@ export default function page() {
       </div>
 
       <div className="mt-12">
-        <Title order={2}>Notifications sent</Title>
-
+        <Title order={2}>Notifications sent</Title> 
         <LineChart
           className="mt-4"
           h={300}
-          data={notificationDeliveryData?.data || []}
+          data={notificationDeliveryData || []}
           dataKey="date"
           series={[
             { name: "sent", color: "indigo.6" },
