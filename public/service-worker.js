@@ -8,13 +8,12 @@ self.addEventListener('message', (event) => {
 });
 
 self.addEventListener('install', (event) => {
-    console.log('Service worker installing...');
+  console.log('Service worker installing...');
 });
 
 self.addEventListener('activate', (event) => {
-    console.log('Service worker activating...');
+  console.log('Service worker activating...');
 });
-
 self.addEventListener('push', (event) => {
   console.log('Push received', event);
   const data = event.data.json();
@@ -32,21 +31,21 @@ self.addEventListener('push', (event) => {
   fetch(`${API_URL}/api/notifications/delivery/${data.id}`, {
     method: 'POST',
   })
-
   event.waitUntil(
     self.registration.showNotification(data.title, options)
   );
 
-  self.addEventListener('notificationclick', event => {
-    const notification = event.notification;
-    const data = notification.data;
-    
-    // Close the notification
-    notification.close();
-  
-    // Open the URL
-    event.waitUntil(
-      clients.openWindow(data.url || '/')  // Use root path as fallback
-    );
-  });
 })
+self.addEventListener('notificationclick', event => {
+  const notification = event.notification;
+  const data = notification.data;
+
+  // Close the notification
+  notification.close();
+  // Open the URL
+  event.waitUntil(
+
+    clients.openWindow(data.url || '/')  // Use root path as fallback
+  );
+
+});

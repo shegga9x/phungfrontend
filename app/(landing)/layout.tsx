@@ -8,7 +8,6 @@ import React, { useEffect } from 'react'
 
 export default function layout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure(false);
-
   const { subscribe, subscription } = useSubscribeToPushNotifications();
 
   useEffect(() => {

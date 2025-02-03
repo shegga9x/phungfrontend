@@ -11,7 +11,7 @@ export const useSubscribeToPushNotifications = () => {
 
   const subscribe = async () => {
     console.log(localStorage);
-    console.log(subscription);
+    console.log(subscription);  
     try {
       if (localStorage && (!subscription || subscription === null)) {
         // Check if notifications are supported

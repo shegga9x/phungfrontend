@@ -37,11 +37,10 @@ export default function page() {
         });
       });
   };
-
-  const { data: notificationDeliveryData } = useSWR("/api/notifications/delivery", () => restClient.getNotificationDeliveryStats())
-
-  const { data: subscribersData } = useSWR("/api/notifications/stats/subscriptions", () => restClient.getNotificationSubscriptionStats())
-
+  const { data: notificationDeliveryData }: any = useSWR("/api/notifications/delivery", () => restClient.getNotificationDeliveryStats())
+  const { data: subscribersData }: any = useSWR("/api/notifications/stats/subscriptions", () => restClient.getNotificationSubscriptionStats())
+  console.log(notificationDeliveryData);
+  
   return (
     <Container size="xl">
       <Notifications />
@@ -74,7 +73,7 @@ export default function page() {
         <LineChart
           className="mt-4"
           h={300}
-          data={notificationDeliveryData || []}
+          data={notificationDeliveryData?.data || []}
           dataKey="date"
           series={[
             { name: "sent", color: "indigo.6" },
