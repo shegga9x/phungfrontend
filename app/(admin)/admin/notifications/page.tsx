@@ -1,10 +1,11 @@
 "use client";
-
+import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
+import React, { useEffect } from "react";
 import Container from "@/components/container";
 import { restClient } from "@/lib/httpClient";
 import { Button, TextInput, Title } from "@mantine/core";
-import React, { useEffect } from "react";
-import { notifications } from "@mantine/notifications";
+import { Notifications, notifications } from "@mantine/notifications";
 import { useForm } from "@mantine/form";
 import { LineChart } from "@mantine/charts";
 import useSWR from "swr";
@@ -19,6 +20,7 @@ export default function page() {
   });
 
   const sendNotification = () => {
+
     restClient
       .pushNotificationNotify(form.values)
       .then(() => {
@@ -36,13 +38,14 @@ export default function page() {
       });
   };
 
-  const {data: notificationDeliveryData} = useSWR("/api/notifications/delivery", () => restClient.getNotificationDeliveryStats())
-  const {data: subscribersData} = useSWR("/api/notifications/stats/subscriptions", () => restClient.getNotificationSubscriptionStats())
+  const { data: notificationDeliveryData } = useSWR("/api/notifications/delivery", () => restClient.getNotificationDeliveryStats())
+
+  const { data: subscribersData } = useSWR("/api/notifications/stats/subscriptions", () => restClient.getNotificationSubscriptionStats())
 
   return (
     <Container size="xl">
+      <Notifications />
       <Title order={1}>Notifications</Title>
-
       <div className="flex flex-col gap-2">
         <TextInput
           label="Title"
@@ -71,7 +74,7 @@ export default function page() {
         <LineChart
           className="mt-4"
           h={300}
-          data={notificationDeliveryData?.data || []}
+          data={notificationDeliveryData || []}
           dataKey="date"
           series={[
             { name: "sent", color: "indigo.6" },
@@ -87,7 +90,7 @@ export default function page() {
         <LineChart
           className="mt-4"
           h={300}
-          data={subscribersData?.data || []}
+          data={subscribersData || []}
           dataKey="date"
           series={[
             { name: "subscribers", color: "indigo.6" },

@@ -7,11 +7,14 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function subscribeToNotifications() {
+
+
   try {
     // Register service worker
     const registration = await navigator.serviceWorker.register(
       "/service-worker.js"
     );
+    
     await navigator.serviceWorker.ready;
 
     registration.active?.postMessage({ type: "CONFIG", apiUrl: process.env.NEXT_PUBLIC_BASE_URL });
