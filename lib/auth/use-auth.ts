@@ -5,6 +5,9 @@ import httpClient, { restClient } from "../httpClient";
 import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
 import { UserResponse } from "@/models/user/UserResponse";
 import { LoginRequest } from "@/models/backend";
+import { useRecoilState } from "recoil";
+import { currentUserIdState } from "@/atoms";
+
 
 interface AuthProps {
   middleware?: "auth" | "guest";
@@ -16,13 +19,16 @@ export const useAuthGuard = ({
   redirectIfAuthenticated,
 }: AuthProps) => {
   const router = useRouter();
-
+  const [auth, setAuth] = useRecoilState(currentUserIdState);
   const {
     data: user,
     error,
     mutate,
   } = useSWR("/api/auth/me", () =>
-    httpClient.get<UserResponse>("/api/auth/me").then((res) => res.data)
+    httpClient.get<UserResponse>("/api/auth/me").then((res) => {
+      setAuth(res.data);
+      return res.data;
+    })
   );
 
   const login = async ({

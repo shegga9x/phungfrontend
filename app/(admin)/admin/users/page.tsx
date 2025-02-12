@@ -42,7 +42,7 @@ export default function page() {
               <Table.Td>{user.lastName}</Table.Td>
               <Table.Td>{user.role}</Table.Td>
               <Table.Td>
-                <a href={process.env.NEXT_PUBLIC_BASE_URL+`/api/auth/impersonate?username=${user.email}`}>
+                <a href={process.env.NEXT_PUBLIC_BASE_URL + `/api/auth/impersonate?username=${user.email}`}>
                   <Button>Impersonate</Button>
                 </a>
               </Table.Td>
@@ -60,7 +60,7 @@ export default function page() {
       </Table>
 
       {data && (
-        <Pagination total={data.totalPages} onChange={setPage} className="mt-4"/>
+        <Pagination total={data.totalPages} onChange={setPage} className="mt-4" />
       )}
     </Container>
   );

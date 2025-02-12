@@ -447,6 +447,7 @@ export class RestApplicationClient {
      * Java method: com.example.backend.auth.controller.AuthController.login
      */
     login(body: LoginRequest): RestResponse<any> {
+
         return this.httpClient.request({ method: "POST", url: uriEncoding`api/auth/login`, data: body });
     }
 

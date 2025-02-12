@@ -39,64 +39,65 @@ export default function page() {
   };
   const { data: notificationDeliveryData }: any = useSWR("/api/notifications/delivery", () => restClient.getNotificationDeliveryStats())
   const { data: subscribersData }: any = useSWR("/api/notifications/stats/subscriptions", () => restClient.getNotificationSubscriptionStats())
-  console.log(notificationDeliveryData);
-   
- 
+
+
   return (
-    <Container size="xl">
-      <Notifications />
-      <Title order={1}>Notifications</Title>
-      <div className="flex flex-col gap-2">
-        <TextInput
-          label="Title"
-          {...form.getInputProps("title")}
-          placeholder="Notification title"
-        />
-        <TextInput
-          label="Message"
-          {...form.getInputProps("message")}
-          placeholder="Notification message"
-        />
-        <TextInput
-          label="URL"
-          {...form.getInputProps("url")}
-          placeholder="Notification url"
-        />
+    <>
+      <Container size="xl">
+        <Notifications />
+        <Title order={1}>Notifications</Title>
+        <div className="flex flex-col gap-2">
+          <TextInput
+            label="Title"
+            {...form.getInputProps("title")}
+            placeholder="Notification title"
+          />
+          <TextInput
+            label="Message"
+            {...form.getInputProps("message")}
+            placeholder="Notification message"
+          />
+          <TextInput
+            label="URL"
+            {...form.getInputProps("url")}
+            placeholder="Notification url"
+          />
 
-        <Button onClick={sendNotification} className="mt-4">
-          Send notification
-        </Button>
-      </div>
+          <Button onClick={sendNotification} className="mt-4">
+            Send notification
+          </Button>
+        </div>
 
-      <div className="mt-12">
-        <Title order={2}>Notifications sent</Title> 
-        <LineChart
-          className="mt-4"
-          h={300}
-          data={notificationDeliveryData || []}
-          dataKey="date"
-          series={[
-            { name: "sent", color: "indigo.6" },
-            { name: "delivered", color: "blue.6" },
-          ]}
-          curveType="linear"
-        />
-      </div>
+        <div className="mt-12">
+          <Title order={2}>Notifications sent</Title>
+          <LineChart
+            className="mt-4"
+            h={300}
+            data={notificationDeliveryData || []}
+            dataKey="date"
+            series={[
+              { name: "sent", color: "indigo.6" },
+              { name: "delivered", color: "blue.6" },
+            ]}
+            curveType="linear"
+          />
+        </div>
 
-      <div className="mt-12">
-        <Title order={2}>Subscriptions</Title>
+        <div className="mt-12">
+          <Title order={2}>Subscriptions</Title>
 
-        <LineChart
-          className="mt-4"
-          h={300}
-          data={subscribersData || []}
-          dataKey="date"
-          series={[
-            { name: "subscribers", color: "indigo.6" },
-          ]}
-          curveType="linear"
-        />
-      </div>
-    </Container>
+          <LineChart
+            className="mt-4"
+            h={300}
+            data={subscribersData || []}
+            dataKey="date"
+            series={[
+              { name: "subscribers", color: "indigo.6" },
+            ]}
+            curveType="linear"
+          />
+        </div>
+      </Container>
+    </>
   );
 }

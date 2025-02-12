@@ -24,7 +24,6 @@ export default function UpdateBasicDetailsForm() {
     setErrors(undefined);
     restClient.updateUser(user!.id.toString(), data)
       .then((as) => {
-        console.log(as)
         toast.success("Profile updated successfully");
         mutate();
       })

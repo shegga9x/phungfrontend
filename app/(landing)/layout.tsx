@@ -1,42 +1,32 @@
 "use client"
 
 import Navbar from '@/components/navbar';
+import CommonLayout from '@/components/v2/Layout';
 import { useSubscribeToPushNotifications } from '@/lib/hooks/useSubscribeToPushNotifications';
-import { AppShell, Burger, Button, Group } from '@mantine/core';
+import { AppShell, Burger, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 export default function layout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure(false);
   const { subscribe, subscription } = useSubscribeToPushNotifications();
+  const hasSubscribed = useRef(false);
 
   useEffect(() => {
-    subscribe()
-    if (!subscription) {
-      subscribe()
+    if (!subscription && !hasSubscribed.current) {
+      subscribe();
+      hasSubscribed.current = true;
     }
-  }, [subscription])
-
+  }, [subscription]);
   return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{ width: 300, breakpoint: 'sm', collapsed: { desktop: true, mobile: !opened } }}
-      padding="md"
-    >
-      <AppShell.Header>
-        <Group h="100%" px="md" className='w-full max-w-screen-xl mx-auto'>
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Navbar className='w-full' />
-        </Group>
-      </AppShell.Header>
-
-      <AppShell.Navbar py="md" px={4}>
-        <Navbar className='w-full' orientation="vertical" />
-      </AppShell.Navbar>
-
-      <AppShell.Main>
-        {children}
-      </AppShell.Main>
+    <AppShell>
+      <CommonLayout headerProps={{
+        hideMenu: true,
+      }}>
+        <AppShell.Main>
+          {children}
+        </AppShell.Main>
+      </CommonLayout>
     </AppShell>
   )
 }

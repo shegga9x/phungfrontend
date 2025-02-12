@@ -29,7 +29,8 @@ export function ResetPasswordForm() {
   );
   const [success, setSuccess] = React.useState<boolean>(false);
 
-  const token = useSearchParams().get("token");
+  const searchParams = useSearchParams();
+  const token = searchParams ? searchParams.get("token") : "";
 
   function onSubmit(data: Schema) {
     httpClient

@@ -5,7 +5,7 @@ import Link from "next/link";
 import React from "react";
 import Logo from "./logo";
 import ModeToggle from "./ModeToggle";
-import Container from "./container";
+import Container from "@/components/container";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import { UserNav } from "./user-nav";
 import AdminNav from "./admin-nav";
@@ -31,12 +31,12 @@ export default function Navbar({ className, ...props }: NavbarProps) {
         <div className="flex gap-x-2 items-center">
           <ModeToggle />
 
-          <AdminNav />
+          {/* <AdminNav /> */}
           {user && (
             <UserNav />
           )}
           {user?.authorities.includes("ROLE_PREVIOUS_ADMINISTRATOR") && (
-            <a href={process.env.NEXT_PUBLIC_BASE_URL+"/api/auth/impersonate/exit"}>
+            <a href={process.env.NEXT_PUBLIC_BASE_URL + "/api/auth/impersonate/exit"}>
               <Button>Exit switch</Button>
             </a>
           )}

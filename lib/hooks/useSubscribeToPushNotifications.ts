@@ -10,8 +10,6 @@ export const useSubscribeToPushNotifications = () => {
   });
 
   const subscribe = async () => {
-    console.log(localStorage);
-    console.log(subscription);  
     try {
       if (localStorage && (!subscription || subscription === null)) {
         // Check if notifications are supported
@@ -19,7 +17,6 @@ export const useSubscribeToPushNotifications = () => {
           restClient.pushNotificationRequestDenied({deniedReason: "NOT_SUPPORTED", requestedBy: "ONLOAD" });
           return;
         }
-
         // Request permission
         const permission = await Notification.requestPermission();
         if (permission !== "granted") {
@@ -27,7 +24,6 @@ export const useSubscribeToPushNotifications = () => {
           return;
         }
         await subscribeToNotifications();
-        
         setSubscription(true);
       }
     } catch (error) {

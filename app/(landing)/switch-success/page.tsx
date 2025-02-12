@@ -7,7 +7,7 @@ import Link from 'next/link'
 import React, { useEffect } from 'react'
 
 export default function page() {
-  const { user, mutate } = useAuthGuard({middleware: 'auth'})
+  const { user, mutate } = useAuthGuard({ middleware: 'auth' })
 
   useEffect(() => {
     console.log('Page init', user)
@@ -22,7 +22,7 @@ export default function page() {
       <div className='mt-4 flex gap-2'>
         {
           user?.authorities.includes('ROLE_PREVIOUS_ADMINISTRATOR') && (
-            <a href={process.env.NEXT_PUBLIC_BASE_URL+"/api/auth/impersonate/exit"}>
+            <a href={process.env.NEXT_PUBLIC_BASE_URL + "/api/auth/impersonate/exit"}>
               <Button>Exit switch</Button>
             </a>
           )

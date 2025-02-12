@@ -1,7 +1,6 @@
 "use client";
 
 import { Inter as FontSans } from "next/font/google";
-import "./globals.css";
 import { cn } from "@/lib/utils";
 import "@mantine/core/styles.css";
 import {
@@ -9,6 +8,10 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import { ThemeProvider } from "@/components/theme-provider";
+import RecoidContextProvider from "./recoilContextProvider";
+import Head from "next/head";
+import CommonLayout from "@/components/v2/Layout";
+import { SnackbarProvider } from "notistack";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -22,9 +25,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
+      <Head>
         <ColorSchemeScript />
-      </head>
+        <title>Bookstore Home</title>
+        <meta name='description' content='Bookstore Home Page' />
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
@@ -32,9 +38,15 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider>
-          <MantineProvider>{children}</MantineProvider>
+          <RecoidContextProvider>
+            <MantineProvider>
+              <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+                {children}
+              </SnackbarProvider>
+            </MantineProvider>
+          </RecoidContextProvider>
         </ThemeProvider>
       </body>
-    </html>
+    </html >
   );
 }
