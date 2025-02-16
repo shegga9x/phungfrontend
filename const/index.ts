@@ -31,7 +31,7 @@ export interface BookRatingsProps {
   ratedAt: string;
   user: {
     id: string;
-    nickname: string;
+    firstName: string;
   };
 }
 

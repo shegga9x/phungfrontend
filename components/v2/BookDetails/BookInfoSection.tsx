@@ -10,18 +10,19 @@ import { bookInfoQuery } from '@/selectors';
 import { BookDetailProps } from '@/const';
 import { currencyFormat } from '@/lib/utils';
 import BookInfoDialog from '@/components/v2/BookDetails/BookInfoDialog';
+import { BooksDTO } from '@/models/backend';
 
 export default function BookInfoSection() {
-  const [bookDetailsState, setBookDetailsState] = React.useState<BookDetailProps | undefined>();
- 
+  const [bookDetailsState, setBookDetailsState] = React.useState<BooksDTO | undefined>();
+
   const editBookDetailDialogRef = React.useRef<HTMLDialogElement>(null);
 
   const bookDetailsLodable = useRecoilValueLoadable(bookInfoQuery);
 
-  const handleUpdate = (data: BookDetailProps) => {
+  const handleUpdate = (data: BooksDTO) => {
     setBookDetailsState(data);
   };
-  
+
 
   switch (bookDetailsLodable.state) {
     case 'hasValue':
@@ -38,7 +39,8 @@ export default function BookInfoSection() {
               </li>
               <li>
                 <BookmarkIcon className='w-4 h-4' />
-                {data.title}
+                {bookDetailsState?.title || data.title}
+
               </li>
             </ul>
           </div>
@@ -52,20 +54,23 @@ export default function BookInfoSection() {
                 height={280}
               />
               <div className='flex flex-col gap-2'>
-                <h1 className='text-5xl font-bold'>{data.title}</h1>
+                <h1 className='text-5xl font-bold'>{bookDetailsState?.title || data.title}
+                </h1>
                 <p className='pt-6'>
                   <span className='text-lg font-bold pr-4'>Type:</span>
-                  {data.type.replaceAll(`_nbsp_`, ` `).replaceAll(`_amp_`, `&`)}
+                  {bookDetailsState ? bookDetailsState.type.replaceAll(`_nbsp_`, ` `).replaceAll(`_amp_`, `&`) : data.type.replaceAll(`_nbsp_`, ` `).replaceAll(`_amp_`, `&`)}
+
                 </p>
                 <p>
                   <span className='text-lg font-bold pr-4'>
                     Publication date:
                   </span>
-                  {new Date(data.publishedAt).toLocaleDateString()}
+                  {bookDetailsState ? new Date(bookDetailsState.publishedAt).toLocaleDateString() : new Date(data.publishedAt).toLocaleDateString()}
+
                 </p>
                 <p>
                   <span className='text-lg font-bold pr-4'>Price:</span>
-                  {`$ ${currencyFormat(data.price)}`}
+                  {`$ ${bookDetailsState ? currencyFormat(bookDetailsState.price) : data.price}`}
                 </p>
                 <p>
                   <span className='text-lg font-bold pr-4'>In stock:</span>

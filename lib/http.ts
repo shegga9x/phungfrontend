@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { BookProps, BookDetailProps, BookRatingsProps } from '@/const';
+import { Books, BooksDTO } from '@/models/backend';
 
 export async function fetchBooks(data: {
   page?: number;
@@ -44,7 +45,7 @@ export async function fetchBookTypes(): Promise<{
 }
 
 export async function fetchBookDetailsById(id: string): Promise<{
-  content: BookDetailProps;
+  content: BooksDTO;
   error?: any;
 }> {
   try {
@@ -53,10 +54,10 @@ export async function fetchBookDetailsById(id: string): Promise<{
       throw new Error(`${response.status} - ${response.data}`);
     }
 
-    return { content: response.data.content as BookDetailProps };
+    return { content: response.data.content as BooksDTO };
   } catch (error) {
     console.error(error);
-    return { error, content: {} as BookDetailProps };
+    return { error, content: {} as BooksDTO };
   }
 }
 
@@ -78,14 +79,13 @@ export async function fetchBookRatingsById(id: string): Promise<{
 }
 
 export async function updateBookDetails(
-  id: string,
-  params: Partial<BookDetailProps>
+  book: BooksDTO
 ): Promise<{
-  content?: { data: BookDetailProps; message: string };
+  content?: { data: Books; message: string };
   error?: any;
 }> {
   try {
-    const response = await axios.put(`/api/books/${id}`, params);
+    const response = await axios.put(`/api/books/` + book.id, book);
     if (response.status !== 200) {
       throw new Error(`${response.status} - ${response.data}`);
     }
@@ -100,15 +100,17 @@ export async function addRatingByBookID(
   bookID: string,
   params: {
     score: number;
+    userId: number;
   }
 ): Promise<{
   content?: { data: Omit<BookRatingsProps, 'user'>; message: string };
   error?: any;
 }> {
   try {
+    
     const response = await axios.post(`/api/books/${bookID}/ratings`, params);
     if (response.status !== 200) {
-      throw new Error(`${response.status} - ${response.data}`);
+      throw new Error(`${response.status} - ${response.data.error}`);
     }
     return { content: response.data };
   } catch (error) {

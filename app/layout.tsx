@@ -3,15 +3,11 @@
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "@mantine/core/styles.css";
-import {
-  ColorSchemeScript,
-  MantineProvider,
-} from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { ThemeProvider } from "@/components/theme-provider";
 import RecoidContextProvider from "./recoilContextProvider";
-import Head from "next/head";
-import CommonLayout from "@/components/v2/Layout";
 import { SnackbarProvider } from "notistack";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -25,24 +21,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <ColorSchemeScript />
-        <title>Bookstore Home</title>
-        <meta name='description' content='Bookstore Home Page' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
+
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
+          fontSans.variable)}>
         <ThemeProvider>
           <RecoidContextProvider>
             <MantineProvider>
-              <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
-                {children}
-              </SnackbarProvider>
+              <HelmetProvider>
+                <Helmet>
+                  <title>BookStore</title>
+                </Helmet>
+                <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+                  {children}
+                </SnackbarProvider>
+              </HelmetProvider>
             </MantineProvider>
           </RecoidContextProvider>
         </ThemeProvider>

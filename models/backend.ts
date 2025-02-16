@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-12-30 16:38:59.
+// Generated using typescript-generator version 3.2.1263 on 2025-02-16 22:07:24.
 
 export interface Notification {
     id: number;
@@ -58,6 +58,42 @@ export interface UploadedFile extends AbstractEntity {
     uploadedAt: Date;
 }
 
+export interface Authors extends Serializable {
+    id: number;
+    name: string;
+    gender: boolean;
+    birthYear: number;
+    deathYear: number;
+}
+
+export interface Books extends Serializable {
+    id: number;
+    title: string;
+    type: string;
+    publishedAt: Date;
+    stock: number;
+    price: number;
+}
+
+export interface Orders extends Serializable {
+    id: number;
+    bookId: number;
+    userId: number;
+    quality: number;
+    orderedAt: Date;
+    books: Books;
+    user: User;
+}
+
+export interface Ratings extends Serializable {
+    bookId: number;
+    userId: number;
+    score: number;
+    ratedAt: Date;
+    books: Books;
+    user: User;
+}
+
 export interface PasswordResetToken extends AbstractEntity {
     token: string;
     emailSent: boolean;
@@ -70,6 +106,7 @@ export interface User extends AbstractEntity, UserDetails {
     email: string;
     firstName: string;
     lastName: string;
+    balance: number;
     verified: boolean;
     profileImageUrl: string;
     role: Role;
@@ -134,28 +171,81 @@ export interface AbstractEntity {
     id: number;
 }
 
+export interface Serializable {
+}
+
+export interface AuthorsDTO extends Serializable {
+    id: number;
+    name: string;
+    gender: boolean;
+    birthYear: number;
+    deathYear: number;
+}
+
+export interface BooksDTO extends Serializable {
+    id: number;
+    title: string;
+    type: string;
+    publishedAt: Date;
+    stock: number;
+    price: number;
+}
+
+export interface OrdersDTO extends Serializable {
+    id: number;
+    bookId: number;
+    userId: number;
+    quality: number;
+    orderedAt: Date;
+    books: BooksDTO;
+    user: UserDTO;
+}
+
+export interface OrdersResponseDTO extends Serializable {
+    orderDTO: OrdersDTO;
+    cost: number;
+    remain: number;
+}
+
+export interface RatingsDTO extends Serializable {
+    bookId: number;
+    userId: number;
+    score: number;
+    ratedAt: Date;
+    books?: BooksDTO | null;
+    user?: UserDTO | null;
+    userDTO?: UserDTO | null;
+}
+
+export interface UserDTO extends Serializable {
+    id: number;
+    balance: number;
+    firstName: string;
+    lastName: string;
+}
+
 export interface GrantedAuthority extends Serializable {
     authority: string;
 }
 
 export interface UserDetails extends Serializable {
     enabled: boolean;
-    username: string;
     password: string;
-    credentialsNonExpired: boolean;
-    accountNonExpired: boolean;
+    username: string;
     authorities: GrantedAuthority[];
     accountNonLocked: boolean;
+    credentialsNonExpired: boolean;
+    accountNonExpired: boolean;
 }
 
 export interface MultipartFile extends InputStreamSource {
-    contentType: string;
     name: string;
     bytes: number[];
     empty: boolean;
     resource: Resource;
     size: number;
     originalFilename: string;
+    contentType: string;
 }
 
 export interface RedirectView extends AbstractUrlBasedView, SmartView {
@@ -171,8 +261,8 @@ export interface RedirectView extends AbstractUrlBasedView, SmartView {
     statusCode: HttpStatus;
     expandUriTemplateVariables: boolean;
     propagateQueryParams: boolean;
-    attributesCSV: string;
     attributes: { [index: string]: any };
+    attributesCSV: string;
 }
 
 export interface ConnectedAccountResponse {
@@ -188,7 +278,15 @@ export interface PagedResponse<T> {
     data: T[];
 }
 
-export interface Serializable {
+export interface BooksResponseDTO {
+    id: number;
+    title: string;
+    type: string;
+    publishedAt: Date;
+    stock: number;
+    price: number;
+    authors: string[];
+    averageRating: number;
 }
 
 export interface Resource extends InputStreamSource {
@@ -212,9 +310,9 @@ export interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
     parent: ApplicationContext;
     id: string;
     displayName: string;
-    startupDate: number;
-    autowireCapableBeanFactory: AutowireCapableBeanFactory;
     applicationName: string;
+    autowireCapableBeanFactory: AutowireCapableBeanFactory;
+    startupDate: number;
 }
 
 export interface ServletContext {
@@ -222,14 +320,15 @@ export interface ServletContext {
     majorVersion: number;
     minorVersion: number;
     attributeNames: Enumeration<string>;
-    responseCharacterEncoding: string;
-    requestCharacterEncoding: string;
     contextPath: string;
+    defaultSessionTrackingModes: SessionTrackingMode[];
+    effectiveSessionTrackingModes: SessionTrackingMode[];
+    effectiveMajorVersion: number;
+    effectiveMinorVersion: number;
     /**
      * @deprecated
      */
     servlets: Enumeration<Servlet>;
-    sessionTimeout: number;
     /**
      * @deprecated
      */
@@ -237,15 +336,14 @@ export interface ServletContext {
     serverInfo: string;
     initParameterNames: Enumeration<string>;
     servletContextName: string;
-    effectiveMajorVersion: number;
-    effectiveMinorVersion: number;
     servletRegistrations: { [index: string]: ServletRegistration };
     filterRegistrations: { [index: string]: FilterRegistration };
     sessionCookieConfig: SessionCookieConfig;
     jspConfigDescriptor: JspConfigDescriptor;
     virtualServerName: string;
-    defaultSessionTrackingModes: SessionTrackingMode[];
-    effectiveSessionTrackingModes: SessionTrackingMode[];
+    sessionTimeout: number;
+    requestCharacterEncoding: string;
+    responseCharacterEncoding: string;
 }
 
 export interface AbstractUrlBasedView extends AbstractView, InitializingBean {
@@ -308,8 +406,8 @@ export interface Enumeration<E> {
 }
 
 export interface Servlet {
-    servletInfo: string;
     servletConfig: ServletConfig;
+    servletInfo: string;
 }
 
 export interface ServletRegistration extends Registration {
@@ -326,15 +424,15 @@ export interface SessionCookieConfig {
     name: string;
     path: string;
     comment: string;
+    domain: string;
     httpOnly: boolean;
     secure: boolean;
-    domain: string;
     maxAge: number;
 }
 
 export interface JspConfigDescriptor {
-    jspPropertyGroups: JspPropertyGroupDescriptor[];
     taglibs: TaglibDescriptor[];
+    jspPropertyGroups: JspPropertyGroupDescriptor[];
 }
 
 export interface AbstractView extends WebApplicationObjectSupport, View, BeanNameAware {
@@ -364,8 +462,8 @@ export interface ResourceLoader {
 
 export interface ServletConfig {
     servletContext: ServletContext;
-    servletName: string;
     initParameterNames: Enumeration<string>;
+    servletName: string;
 }
 
 export interface Registration {
@@ -374,24 +472,24 @@ export interface Registration {
     initParameters: { [index: string]: string };
 }
 
-export interface JspPropertyGroupDescriptor {
-    buffer: string;
-    trimDirectiveWhitespaces: string;
-    errorOnUndeclaredNamespace: string;
-    deferredSyntaxAllowedAsLiteral: string;
-    pageEncoding: string;
-    urlPatterns: string[];
-    elIgnored: string;
-    includeCodas: string[];
-    includePreludes: string[];
-    scriptingInvalid: string;
-    defaultContentType: string;
-    isXml: string;
-}
-
 export interface TaglibDescriptor {
     taglibURI: string;
     taglibLocation: string;
+}
+
+export interface JspPropertyGroupDescriptor {
+    buffer: string;
+    deferredSyntaxAllowedAsLiteral: string;
+    urlPatterns: string[];
+    elIgnored: string;
+    pageEncoding: string;
+    scriptingInvalid: string;
+    isXml: string;
+    includePreludes: string[];
+    includeCodas: string[];
+    trimDirectiveWhitespaces: string;
+    defaultContentType: string;
+    errorOnUndeclaredNamespace: string;
 }
 
 export interface WebApplicationObjectSupport extends ApplicationObjectSupport, ServletContextAware {
@@ -428,9 +526,9 @@ export class RestApplicationClient {
 
     /**
      * HTTP GET /api/admin/users
-     * Java method: com.example.backend.admin.controller.AdminUsersController.admin_getUsers
+     * Java method: com.example.backend.admin.controller.AdminUserController.admin_getUser
      */
-    admin_getUsers(queryParams?: { page?: number; }): RestResponse<PagedResponse<UserResponse>> {
+    admin_getUser(queryParams?: { page?: number; }): RestResponse<PagedResponse<UserResponse>> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/admin/users`, queryParams: queryParams });
     }
 
@@ -447,7 +545,6 @@ export class RestApplicationClient {
      * Java method: com.example.backend.auth.controller.AuthController.login
      */
     login(body: LoginRequest): RestResponse<any> {
-
         return this.httpClient.request({ method: "POST", url: uriEncoding`api/auth/login`, data: body });
     }
 
@@ -517,7 +614,7 @@ export class RestApplicationClient {
 
     /**
      * HTTP POST /api/users
-     * Java method: com.example.backend.users.controller.UsersController.createUser
+     * Java method: com.example.backend.users.controller.UserController.createUser
      */
     createUser(request: CreateUserRequest): RestResponse<UserResponse> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`api/users`, data: request });
@@ -525,7 +622,7 @@ export class RestApplicationClient {
 
     /**
      * HTTP POST /api/users/forgot-password
-     * Java method: com.example.backend.users.controller.UsersController.forgotPassword
+     * Java method: com.example.backend.users.controller.UserController.forgotPassword
      */
     forgotPassword(req: ForgotPasswordRequest): RestResponse<void> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`api/users/forgot-password`, data: req });
@@ -533,7 +630,7 @@ export class RestApplicationClient {
 
     /**
      * HTTP PATCH /api/users/password
-     * Java method: com.example.backend.users.controller.UsersController.updatePassword
+     * Java method: com.example.backend.users.controller.UserController.updatePassword
      */
     updatePassword(requestDTO: UpdateUserPasswordRequest): RestResponse<UserResponse> {
         return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/users/password`, data: requestDTO });
@@ -541,7 +638,7 @@ export class RestApplicationClient {
 
     /**
      * HTTP PATCH /api/users/reset-password
-     * Java method: com.example.backend.users.controller.UsersController.resetPassword
+     * Java method: com.example.backend.users.controller.UserController.resetPassword
      */
     resetPassword(requestDTO: UpdateUserPasswordRequest): RestResponse<void> {
         return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/users/reset-password`, data: requestDTO });
@@ -549,7 +646,7 @@ export class RestApplicationClient {
 
     /**
      * HTTP GET /api/users/verify-email
-     * Java method: com.example.backend.users.controller.UsersController.verifyEmail
+     * Java method: com.example.backend.users.controller.UserController.verifyEmail
      */
     verifyEmail(queryParams: { token: string; }): RestResponse<RedirectView> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/users/verify-email`, queryParams: queryParams });
@@ -557,7 +654,7 @@ export class RestApplicationClient {
 
     /**
      * HTTP PUT /api/users/{id}
-     * Java method: com.example.backend.users.controller.UsersController.updateUser
+     * Java method: com.example.backend.users.controller.UserController.updateUser
      */
     updateUser(id: string, request: UpdateUserRequest): RestResponse<UserResponse> {
         return this.httpClient.request({ method: "PUT", url: uriEncoding`api/users/${id}`, data: request });
@@ -565,18 +662,318 @@ export class RestApplicationClient {
 
     /**
      * HTTP PATCH /api/users/{id}/profile-picture
-     * Java method: com.example.backend.users.controller.UsersController.updateProfilePicture
+     * Java method: com.example.backend.users.controller.UserController.updateProfilePicture
      */
     updateProfilePicture(id: number, queryParams: { file: MultipartFile; }): RestResponse<UserResponse> {
         return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/users/${id}/profile-picture`, queryParams: queryParams });
     }
+
+    /**
+     * HTTP POST /api/v1/authors
+     * Java method: com.example.backend.telosys.rest.controllers.AuthorsRestController.create
+     */
+    create$POST$api_v1_authors(authorsDTO: AuthorsDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/authors`, data: authorsDTO });
+    }
+
+    /**
+     * HTTP GET /api/v1/authors
+     * Java method: com.example.backend.telosys.rest.controllers.AuthorsRestController.findAll
+     */
+    findAll$GET$api_v1_authors(): RestResponse<AuthorsDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/authors` });
+    }
+
+    /**
+     * HTTP PUT /api/v1/authors
+     * Java method: com.example.backend.telosys.rest.controllers.AuthorsRestController.update
+     */
+    update$PUT$api_v1_authors(authorsDTO: AuthorsDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/authors`, data: authorsDTO });
+    }
+
+    /**
+     * HTTP DELETE /api/v1/authors/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.AuthorsRestController.deleteById
+     */
+    deleteById$DELETE$api_v1_authors_id(id: number): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/v1/authors/${id}` });
+    }
+
+    /**
+     * HTTP GET /api/v1/authors/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.AuthorsRestController.findById
+     */
+    findById$GET$api_v1_authors_id(id: number): RestResponse<AuthorsDTO> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/authors/${id}` });
+    }
+
+    /**
+     * HTTP PATCH /api/v1/authors/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.AuthorsRestController.partialUpdate
+     */
+    partialUpdate$PATCH$api_v1_authors_id(id: number, authorsDTO: AuthorsDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/v1/authors/${id}`, data: authorsDTO });
+    }
+
+    /**
+     * HTTP PUT /api/v1/authors/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.AuthorsRestController.save
+     */
+    save$PUT$api_v1_authors_id(id: number, authorsDTO: AuthorsDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/authors/${id}`, data: authorsDTO });
+    }
+
+    /**
+     * HTTP POST /api/v1/books
+     * Java method: com.example.backend.telosys.rest.controllers.BooksRestController.create
+     */
+    create$POST$api_v1_books(booksDTO: BooksDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/books`, data: booksDTO });
+    }
+
+    /**
+     * HTTP GET /api/v1/books
+     * Java method: com.example.backend.telosys.rest.controllers.BooksRestController.findAllWithPagination
+     */
+    findAllWithPagination(queryParams?: { page?: number; size?: number; type?: string; sort?: string; }): RestResponse<BooksResponseDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/books`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP PUT /api/v1/books
+     * Java method: com.example.backend.telosys.rest.controllers.BooksRestController.update
+     */
+    update$PUT$api_v1_books(booksDTO: BooksDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/books`, data: booksDTO });
+    }
+
+    /**
+     * HTTP GET /api/v1/books/totalBooksWithAuthorsAndAvgScore
+     * Java method: com.example.backend.telosys.rest.controllers.BooksRestController.getTotalBooksWithAuthorsAndAvgScore
+     */
+    getTotalBooksWithAuthorsAndAvgScore(queryParams?: { type?: string; }): RestResponse<number> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/books/totalBooksWithAuthorsAndAvgScore`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP DELETE /api/v1/books/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.BooksRestController.deleteById
+     */
+    deleteById$DELETE$api_v1_books_id(id: number): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/v1/books/${id}` });
+    }
+
+    /**
+     * HTTP GET /api/v1/books/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.BooksRestController.findById
+     */
+    findById$GET$api_v1_books_id(id: number): RestResponse<BooksDTO> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/books/${id}` });
+    }
+
+    /**
+     * HTTP PATCH /api/v1/books/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.BooksRestController.partialUpdate
+     */
+    partialUpdate$PATCH$api_v1_books_id(id: number, booksDTO: BooksDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/v1/books/${id}`, data: booksDTO });
+    }
+
+    /**
+     * HTTP PUT /api/v1/books/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.BooksRestController.save
+     */
+    save$PUT$api_v1_books_id(id: number, booksDTO: BooksDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/books/${id}`, data: booksDTO });
+    }
+
+    /**
+     * HTTP POST /api/v1/orders
+     * Java method: com.example.backend.telosys.rest.controllers.OrdersRestController.create
+     */
+    create$POST$api_v1_orders(ordersDTO: OrdersDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/orders`, data: ordersDTO });
+    }
+
+    /**
+     * HTTP GET /api/v1/orders
+     * Java method: com.example.backend.telosys.rest.controllers.OrdersRestController.findAll
+     */
+    findAll$GET$api_v1_orders(): RestResponse<OrdersDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/orders` });
+    }
+
+    /**
+     * HTTP PUT /api/v1/orders
+     * Java method: com.example.backend.telosys.rest.controllers.OrdersRestController.update
+     */
+    update$PUT$api_v1_orders(ordersDTO: OrdersDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/orders`, data: ordersDTO });
+    }
+
+    /**
+     * HTTP POST /api/v1/orders/buybook
+     * Java method: com.example.backend.telosys.rest.controllers.OrdersRestController.buyBook
+     */
+    buyBook(ordersDTO: OrdersDTO): RestResponse<OrdersResponseDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/orders/buybook`, data: ordersDTO });
+    }
+
+    /**
+     * HTTP DELETE /api/v1/orders/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.OrdersRestController.deleteById
+     */
+    deleteById$DELETE$api_v1_orders_id(id: number): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/v1/orders/${id}` });
+    }
+
+    /**
+     * HTTP GET /api/v1/orders/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.OrdersRestController.findById
+     */
+    findById$GET$api_v1_orders_id(id: number): RestResponse<OrdersDTO> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/orders/${id}` });
+    }
+
+    /**
+     * HTTP PATCH /api/v1/orders/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.OrdersRestController.partialUpdate
+     */
+    partialUpdate$PATCH$api_v1_orders_id(id: number, ordersDTO: OrdersDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/v1/orders/${id}`, data: ordersDTO });
+    }
+
+    /**
+     * HTTP PUT /api/v1/orders/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.OrdersRestController.save
+     */
+    save$PUT$api_v1_orders_id(id: number, ordersDTO: OrdersDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/orders/${id}`, data: ordersDTO });
+    }
+
+    /**
+     * HTTP POST /api/v1/ratings
+     * Java method: com.example.backend.telosys.rest.controllers.RatingsRestController.create
+     */
+    create$POST$api_v1_ratings(ratingsDTO: RatingsDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/ratings`, data: ratingsDTO });
+    }
+
+    /**
+     * HTTP GET /api/v1/ratings
+     * Java method: com.example.backend.telosys.rest.controllers.RatingsRestController.findAll
+     */
+    findAll$GET$api_v1_ratings(): RestResponse<RatingsDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/ratings` });
+    }
+
+    /**
+     * HTTP PUT /api/v1/ratings
+     * Java method: com.example.backend.telosys.rest.controllers.RatingsRestController.update
+     */
+    update$PUT$api_v1_ratings(ratingsDTO: RatingsDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/ratings`, data: ratingsDTO });
+    }
+
+    /**
+     * HTTP GET /api/v1/ratings/{bookId}
+     * Java method: com.example.backend.telosys.rest.controllers.RatingsRestController.findByBookId
+     */
+    findByBookId(bookId: number): RestResponse<RatingsDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/ratings/${bookId}` });
+    }
+
+    /**
+     * HTTP DELETE /api/v1/ratings/{bookId}/{userId}
+     * Java method: com.example.backend.telosys.rest.controllers.RatingsRestController.deleteById
+     */
+    deleteById$DELETE$api_v1_ratings_bookId_userId(bookId: number, userId: number): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/v1/ratings/${bookId}/${userId}` });
+    }
+
+    /**
+     * HTTP GET /api/v1/ratings/{bookId}/{userId}
+     * Java method: com.example.backend.telosys.rest.controllers.RatingsRestController.findById
+     */
+    findById$GET$api_v1_ratings_bookId_userId(bookId: number, userId: number): RestResponse<RatingsDTO> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/ratings/${bookId}/${userId}` });
+    }
+
+    /**
+     * HTTP PATCH /api/v1/ratings/{bookId}/{userId}
+     * Java method: com.example.backend.telosys.rest.controllers.RatingsRestController.partialUpdate
+     */
+    partialUpdate$PATCH$api_v1_ratings_bookId_userId(bookId: number, userId: number, ratingsDTO: RatingsDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/v1/ratings/${bookId}/${userId}`, data: ratingsDTO });
+    }
+
+    /**
+     * HTTP PUT /api/v1/ratings/{bookId}/{userId}
+     * Java method: com.example.backend.telosys.rest.controllers.RatingsRestController.save
+     */
+    save$PUT$api_v1_ratings_bookId_userId(bookId: number, userId: number, ratingsDTO: RatingsDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/ratings/${bookId}/${userId}`, data: ratingsDTO });
+    }
+
+    /**
+     * HTTP POST /api/v1/user
+     * Java method: com.example.backend.telosys.rest.controllers.UserRestController.create
+     */
+    create$POST$api_v1_user(userDTO: UserDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/user`, data: userDTO });
+    }
+
+    /**
+     * HTTP GET /api/v1/user
+     * Java method: com.example.backend.telosys.rest.controllers.UserRestController.findAll
+     */
+    findAll$GET$api_v1_user(): RestResponse<UserDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/user` });
+    }
+
+    /**
+     * HTTP PUT /api/v1/user
+     * Java method: com.example.backend.telosys.rest.controllers.UserRestController.update
+     */
+    update$PUT$api_v1_user(userDTO: UserDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/user`, data: userDTO });
+    }
+
+    /**
+     * HTTP DELETE /api/v1/user/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.UserRestController.deleteById
+     */
+    deleteById$DELETE$api_v1_user_id(id: number): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/v1/user/${id}` });
+    }
+
+    /**
+     * HTTP GET /api/v1/user/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.UserRestController.findById
+     */
+    findById$GET$api_v1_user_id(id: number): RestResponse<UserDTO> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/user/${id}` });
+    }
+
+    /**
+     * HTTP PATCH /api/v1/user/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.UserRestController.partialUpdate
+     */
+    partialUpdate$PATCH$api_v1_user_id(id: number, userDTO: UserDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/v1/user/${id}`, data: userDTO });
+    }
+
+    /**
+     * HTTP PUT /api/v1/user/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.UserRestController.save
+     */
+    save$PUT$api_v1_user_id(id: number, userDTO: UserDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/user/${id}`, data: userDTO });
+    }
 }
 
-export type RestResponse<R> = Promise<{
-    data: R;
-    status: number;
-    statusText: string;
-}>;
+export type RestResponse<R> = Promise<R>;
 
 export type RequestEvent = "ONLOAD" | "USER_INTERACTION";
 

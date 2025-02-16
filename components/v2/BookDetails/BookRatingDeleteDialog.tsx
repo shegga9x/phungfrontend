@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useSnackbar } from 'notistack';
-import NextRouter from 'next/router';
 
 import { deleteRating } from '@/lib/http';
 
 export interface BookRatingDeleteDialog {
   bookId: string;
   userId: string;
+  refreshBookRatings: () => void;
 }
 
 const BookRatingDeleteDialog = React.forwardRef(
@@ -38,7 +38,7 @@ const BookRatingDeleteDialog = React.forwardRef(
       });
       setLoading(false);
       handleClose();
-      NextRouter.reload();
+      props.refreshBookRatings();
     };
 
     return (

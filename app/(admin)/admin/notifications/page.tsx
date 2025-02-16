@@ -71,7 +71,7 @@ export default function page() {
         <div className="mt-12">
           <Title order={2}>Notifications sent</Title>
           <LineChart
-            className="mt-4"
+            className="mt-2"
             h={300}
             data={notificationDeliveryData || []}
             dataKey="date"

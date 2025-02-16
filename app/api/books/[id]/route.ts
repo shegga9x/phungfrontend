@@ -1,4 +1,5 @@
-import httpClient from '@/lib/httpClient';
+import httpClient, { restClient } from '@/lib/httpClient';
+import { BooksDTO } from '@/models/backend';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -10,3 +11,16 @@ export async function GET(req: NextRequest) {
     }, { status: 200 });
 }
 
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+    const { id } = params;
+    if (!id || isNaN(Number(id))) {
+        return NextResponse.json({ error: "Invalid parameter `id`." }, { status: 400 });
+    } else {
+
+        const body = await request.json();
+        const booksDTO = body as BooksDTO;
+        await restClient.update$PUT$api_v1_books(booksDTO);
+        return NextResponse.json({ message: "Books update successfully." }, { status: 200 });
+    }
+
+}

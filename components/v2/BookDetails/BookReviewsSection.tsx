@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { useRecoilState, useRecoilValueLoadable } from 'recoil';
-import { bookDetailsIdState } from '@/atoms';
+import { useRecoilRefresher_UNSTABLE, useRecoilState, useRecoilValueLoadable } from 'recoil';
+import { bookDetailsIdState, currentUserIdState } from '@/atoms';
 import { bookRatingQuery } from '@/selectors';
 import { BookRatingsProps, starLabels } from '@/const';
 import { roundHalf } from '@/lib/utils';
 import HalfRating from '@/components/v2/Rating/HalfRating';
 import BookRatingDeleteDialog from '@/components/v2/BookDetails/BookRatingDeleteDialog';
 import BookAddRatingDialog from '@/components/v2/BookDetails/BookAddRatingDialog';
+import { Role } from '@/models/user/UserResponse';
 
 export default function BookReviewsSection() {
   const addRatingDialogRef = React.useRef<HTMLDialogElement>(null);
-
+  const refreshBookRatings = useRecoilRefresher_UNSTABLE(bookRatingQuery);
   const bookRatingLoadable = useRecoilValueLoadable(bookRatingQuery);
   const [bookDetailsId] = useRecoilState(bookDetailsIdState);
+
 
   switch (bookRatingLoadable.state) {
     case 'hasValue':
@@ -37,12 +39,14 @@ export default function BookReviewsSection() {
               </div>
               <div className='overflow-x-auto mt-16'>
                 {data?.content?.length > 0 && (
-                  <ReviewsTable content={data.content} bookId={bookDetailsId} />
+
+                  <ReviewsTable content={data.content} bookId={bookDetailsId} refreshBookRatings={refreshBookRatings} />
                 )}
               </div>
             </div>
           </div>
           <BookAddRatingDialog
+            refreshBookRatings={refreshBookRatings}
             bookId={bookDetailsId}
             ref={addRatingDialogRef}
           />
@@ -136,13 +140,12 @@ const StarPercentageBar = (props: { leftText?: string; value: number }) => {
 const ReviewsTable = (props: {
   content: BookRatingsProps[];
   bookId: string;
+  refreshBookRatings: () => void;
 }) => {
   const { content, bookId } = props;
-  
   const [targetUserId, setTargetUserId] = React.useState<string | null>(null);
-
   const deletaDialogRef = React.useRef<HTMLDialogElement>(null);
-
+  const [auth] = useRecoilState(currentUserIdState);
   const handleDelete = (userId: string) => () => {
     setTargetUserId(userId);
     deletaDialogRef.current?.showModal();
@@ -171,12 +174,12 @@ const ReviewsTable = (props: {
                       <div className='avatar placeholder'>
                         <div className='bg-neutral-focus text-neutral-content mask mask-squircle w-12 h-12'>
                           <span className='text-3xl'>
-                            {item.user.nickname.substring(0, 1)}
+                            {item.user.firstName.substring(0, 1)}
                           </span>
                         </div>
                       </div>
                       <div>
-                        <div className='font-bold'>{item.user.nickname}</div>
+                        <div className='font-bold'>{item.user.firstName}</div>
                         <div className='text-sm opacity-50'>
                           User ID: {item.user.id}
                         </div>
@@ -188,12 +191,13 @@ const ReviewsTable = (props: {
                   </td>
                   <td>{`${new Date(item.ratedAt).toLocaleDateString()}`}</td>
                   <th>
-                    <button
-                      className='btn btn-error btn-xs'
-                      onClick={handleDelete(item.userId)}
-                    >
-                      delete
-                    </button>
+                    {auth?.role === Role.ADMIN && (
+                      <button
+                        className='btn btn-error btn-xs'
+                        onClick={handleDelete(item.userId)}
+                      >
+                        delete
+                      </button>)}
                   </th>
                 </tr>
               </>
@@ -203,6 +207,7 @@ const ReviewsTable = (props: {
       </table>
       {targetUserId && (
         <BookRatingDeleteDialog
+          refreshBookRatings={props.refreshBookRatings}
           bookId={bookId}
           userId={targetUserId}
           ref={deletaDialogRef}
