@@ -179,7 +179,7 @@ const ReviewsTable = (props: {
                         </div>
                       </div>
                       <div>
-                        <div className='font-bold'>{item.user.firstName}</div>
+                        <div className='font-bold'>{item.user.firstName || ""}</div>
                         <div className='text-sm opacity-50'>
                           User ID: {item.user.id}
                         </div>
