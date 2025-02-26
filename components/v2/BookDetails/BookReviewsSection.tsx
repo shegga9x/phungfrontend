@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRecoilRefresher_UNSTABLE, useRecoilState, useRecoilValueLoadable } from 'recoil';
-import { bookDetailsIdState, currentUserIdState } from '@/atoms';
+import { bookDetailsIdState, currentUserState } from '@/atoms';
 import { bookRatingQuery } from '@/selectors';
 import { BookRatingsProps, starLabels } from '@/const';
 import { roundHalf } from '@/lib/utils';
@@ -145,7 +145,7 @@ const ReviewsTable = (props: {
   const { content, bookId } = props;
   const [targetUserId, setTargetUserId] = React.useState<string | null>(null);
   const deletaDialogRef = React.useRef<HTMLDialogElement>(null);
-  const [auth] = useRecoilState(currentUserIdState);
+  const [auth] = useRecoilState(currentUserState);
   const handleDelete = (userId: string) => () => {
     setTargetUserId(userId);
     deletaDialogRef.current?.showModal();
@@ -174,7 +174,7 @@ const ReviewsTable = (props: {
                       <div className='avatar placeholder'>
                         <div className='bg-neutral-focus text-neutral-content mask mask-squircle w-12 h-12'>
                           <span className='text-3xl'>
-                            {item.user.firstName.substring(0, 1)}
+                            {item.user.firstName?.substring(0, 1)}
                           </span>
                         </div>
                       </div>

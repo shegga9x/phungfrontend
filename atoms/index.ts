@@ -1,17 +1,15 @@
-import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import { atom, atomFamily, RecoilState, selector, useRecoilState, useRecoilValue } from "recoil";
 
 import { shoppingCartItemProps, BookProps, PAGE_SIZE } from "@/const";
 import { UserResponse } from "@/models/user/UserResponse";
+import { GHNAvailableServicesDTO, GHNProvinceDTO } from "@/models/backend";
+import { cartSelector, getCartQuery } from "@/selectors";
 
 export const homePageBookSumState = atom({
   key: "homePageBookSumState",
   default: 0,
 });
 
-export const shoppingCartState = atom<shoppingCartItemProps[]>({
-  key: "shoppingCartState",
-  default: [],
-});
 
 export const bookTypeListState = atom<string[]>({
   key: "bookTypeListState",
@@ -28,7 +26,27 @@ export const bookDetailsIdState = atom({
   default: "",
 });
 
-export const currentUserIdState = atom<UserResponse | null>({
-  key: "currentUserIdState",
+export const currentUserState = atom<UserResponse | null>({
+  key: "currentUserState",
   default: null,
+});
+
+export const cartState = atom<shoppingCartItemProps[]>({
+  key: "cartState",
+  default: [], // Default empty cart
+});
+
+export const cartLoadingStage = atom({
+  key: "cartLoadingAtom",
+  default: false, // Initially not loading
+});
+
+export const currentCartUpdateItemStage = atom({
+  key: "currentCartUpdateItemStage",
+  default: "", // Initially not loading
+});
+
+export const gHNAvailableServicesSelectedState = atom<number | null>({
+  key: "gHNAvailableServicesSelectedState",
+  default: null, // Initially not loading
 });

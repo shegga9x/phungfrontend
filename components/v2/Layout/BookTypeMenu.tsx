@@ -11,6 +11,7 @@ import { fetchBookTypes } from '@/lib/http';
 
 export default function BookTypeMenu() {
   const [loadingBookType, setLoadingBookType] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState(''); // Add search state
 
   const [bookTypeList, setBookTypeList] = useRecoilState(bookTypeListState);
   const [homePageQueryData, setHomePageQueryData] =
@@ -35,6 +36,10 @@ export default function BookTypeMenu() {
     !bookTypeList.length && func();
   }, [bookTypeList.length, enqueueSnackbar, setBookTypeList]);
 
+  const filteredBookTypes = searchQuery ?
+    bookTypeList.filter((bookType) =>
+      bookType.toLowerCase().includes(searchQuery.toLowerCase()))
+    : bookTypeList;
   return (
     <>
       <ul
@@ -43,28 +48,37 @@ export default function BookTypeMenu() {
       >
         <li>
           <div className='menu-title'>Book Type</div>
-          <ul>
-            {bookTypeList.map((bookType) => (
-              <li
-                key={bookType}
-                onClick={() => {
-                  setHomePageQueryData({
-                    ...homePageQueryData,
-                    page: 0,
-                    type: encodeURIComponent(bookType),
-                  });
-                }}
-              >
-                <span
-                  className={clsx({
-                    active: homePageQueryData.type === bookType,
-                  })}
+          <input
+            type="text"
+            placeholder="Search book types..."
+            className="input input-bordered w-full max-w-xs mr-2"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+            <ul>
+              {filteredBookTypes.map((bookType) => (
+                <li
+                  key={bookType}
+                  onClick={() => {
+                    setHomePageQueryData({
+                      ...homePageQueryData,
+                      page: 0,
+                      type: encodeURIComponent(bookType),
+                    });
+                  }}
                 >
-                  {bookType.replaceAll(`_nbsp_`, ` `).replaceAll(`_amp_`, `&`)}
-                </span>
-              </li>
-            ))}
-          </ul>
+                  <span
+                    className={clsx({
+                      active: homePageQueryData.type === bookType,
+                    })}
+                  >
+                    {bookType.replaceAll('_nbsp_', ' ').replaceAll('_amp_', '&')}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </li>
 
         <li>

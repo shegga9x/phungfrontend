@@ -1,17 +1,20 @@
+import { selector, selectorFamily } from "recoil";
 import {
-  atom,
-  selector,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-  waitForNone,
-} from "recoil";
-import { bookDetailsIdState, homePageQueryState } from "@/atoms";
+  bookDetailsIdState, cartLoadingStage,
+  cartState, currentUserState, homePageQueryState
+} from "@/atoms";
 import {
   fetchBookDetailsById,
   fetchBookRatingsById,
   fetchBooks,
+  fetchAddressList,
+  fetchShippingInfo,
+  getAvailableServices,
+  getCart,
+  updateCart,
 } from "@/lib/http";
+import { shoppingCartItemProps } from "@/const";
+import { CartItemDTO } from "@/models/backend";
 
 export const homePageQuery = selector({
   key: "homePage",
@@ -46,5 +49,79 @@ export const bookRatingQuery = selector({
       throw response.error;
     }
     return response;
+  },
+});
+
+export const provinceListQuery = selector({
+  key: "provinceListQuery",
+  get: async ({ get }) => {
+    const response = await fetchAddressList("province", 1);
+    return response;
+  },
+});
+
+export const userShippingInfoQuery = selector({
+  key: "userShippingInfoQuery",
+  get: async ({ get }) => {
+    const user = get(currentUserState);
+    if (user) {
+      const response = await fetchShippingInfo(user?.id);
+
+      return response;
+    }
+    return null;
+  },
+});
+
+export const getAvailableServicesQuery = selector({
+  key: "getAvailableServicesQuery",
+  get: async ({ get }) => {
+    const user = get(currentUserState);
+    if (user) {
+      const response = await getAvailableServices(user?.id);
+      return response;
+    }
+    return null;
+  },
+});
+
+
+export const getCartQuery = selector<shoppingCartItemProps[]>({
+  key: "getCartQuery",
+  get: async ({ get }) => {
+    const user = get(currentUserState);
+    if (user) {
+      const response = await getCart(user?.id);
+      return [];
+    }
+    return [];
+  },
+});
+
+
+export const cartSelector = selector<shoppingCartItemProps[]>({
+  key: "cartSelector",
+  get: async ({ get }) => {
+    const user = get(currentUserState);
+    const numericUserId = Number(user?.id); // Ensure it's a number
+    if (!numericUserId) return []; // If userId is invalid, return empty
+    const existingCart: shoppingCartItemProps[] = get(cartState);
+    if (existingCart.length > 0) return existingCart; // Return cached cart
+    // Fetch cart from API
+    try {
+      const response = await getCart(numericUserId);
+      if (response.content) {
+        const result = response.content;
+        return result as unknown as shoppingCartItemProps[];
+      }
+    } catch (error) {
+      console.log(error);
+
+    }
+
+    return [];
+  },
+  set: ({ set }, newCart) => {
+    set(cartState, newCart); // Update atom state
   },
 });

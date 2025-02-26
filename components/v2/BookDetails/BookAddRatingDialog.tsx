@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useSnackbar } from 'notistack';
 import { addRatingByBookID } from '@/lib/http';
 import HalfRating from '@/components/v2/Rating/HalfRating';
-import { currentUserIdState } from '@/atoms';
+import { currentUserState } from '@/atoms';
 import { useRecoilValue } from 'recoil';
 
 export interface BookAddRatingDialog {
@@ -17,7 +17,7 @@ const BookAddRatingDialog = React.forwardRef(
     const [loading, setLoading] = React.useState(false);
     const [value, setValue] = React.useState<number | null>(null);
     const { enqueueSnackbar } = useSnackbar();
-    const auth = useRecoilValue(currentUserIdState);
+    const auth = useRecoilValue(currentUserState);
     const handleChange = (newValue: number | null) => {
       setValue(newValue);
     };

@@ -7,7 +7,6 @@ import {
 import { HomeIcon, BookmarkIcon } from '@heroicons/react/24/outline';
 
 import { bookInfoQuery } from '@/selectors';
-import { BookDetailProps } from '@/const';
 import { currencyFormat } from '@/lib/utils';
 import BookInfoDialog from '@/components/v2/BookDetails/BookInfoDialog';
 import { BooksDTO } from '@/models/backend';
@@ -48,10 +47,11 @@ export default function BookInfoSection() {
           <div className='hero h-auto justify-start shadow-xl rounded-box'>
             <div className='hero-content flex-col lg:flex-row'>
               <Image
-                src={`https://picsum.photos/seed/${data.id}/200/280`}
+                src={`https://itbook.store/img/books/${data.id}.png`}
                 alt={`book image`}
                 width={200}
                 height={280}
+                unoptimized
               />
               <div className='flex flex-col gap-2'>
                 <h1 className='text-5xl font-bold'>{bookDetailsState?.title || data.title}

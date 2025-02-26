@@ -2,102 +2,129 @@ import * as React from 'react';
 import Image from 'next/image';
 import { useSnackbar } from 'notistack';
 import { PlusIcon, MinusIcon, TrashIcon } from '@heroicons/react/24/outline';
-
-import { useRecoilState } from 'recoil';
-import { shoppingCartState, currentUserIdState } from '@/atoms';
-
+import { useRecoilState, useRecoilValueLoadable } from 'recoil';
+import { currentCartUpdateItemStage, currentUserState, gHNAvailableServicesSelectedState } from '@/atoms';
 import { shoppingCartItemProps } from '@/const';
 import { currencyFormat, calcCartItemTotalPrice } from '@/lib/utils';
-import { buyBook } from '@/lib/http';
+import { buyBook, deleteCartItem, getShippingFee, getVNPayUrl, updateCart } from '@/lib/http';
+import { cartSelector, getAvailableServicesQuery } from '@/selectors';
+import { CartItemDTO, OrdersResponseDTO } from '@/models/backend';
+import Loading from '@/components/loading';
+import { useRouter } from "next/navigation";
 
 export default function ShoppingCartListItem(props: shoppingCartItemProps) {
-  const {
-    id,
-    title,
-    authors,
-    type,
-    price,
-    averageRating,
-    quantity,
-    stock,
-    publishedAt,
-  } = props;
+  const { id, title, authors, type, price, averageRating, quantity, stock, publishedAt, shippingFee } = props;
   const [loading, setLoading] = React.useState(false);
-
-  const [shoppingCart, setShoppingCart] = useRecoilState(shoppingCartState);
-  const [currentUserId] = useRecoilState(currentUserIdState);
-
+  const [loadingStage, setLoadingStage] = React.useState(false);
+  const [gHNAvailableServicesSelected] = useRecoilState(gHNAvailableServicesSelectedState);
+  const [currentUser] = useRecoilState(currentUserState);
+  const [shoppingCart, setShoppingCart] = useRecoilState(cartSelector);
+  const [currentComponentID, setCurrentComponentID] = useRecoilState(currentCartUpdateItemStage);
+  const gHNAvailableServicesDTOs = useRecoilValueLoadable(getAvailableServicesQuery);
   const { enqueueSnackbar } = useSnackbar();
 
+  React.useEffect(() => {
+    if (shoppingCart && currentComponentID === props.id) {
+      updateCart1(shoppingCart);
+    }
+    setCurrentComponentID("")
+  }, [currentComponentID]);
+  const updateCart1 = async (updatedCart: shoppingCartItemProps[]) => {
+    setLoadingStage(true)
+    const cartItemDTOs: CartItemDTO[] = updatedCart.map((item: shoppingCartItemProps) => {
+      return {
+        userId: currentUser?.id ?? 0,
+        bookId: Number(item.id),
+        quantity: item.quantity,
+        createdAt: new Date(),
+      };
+    });
+    updateCart(cartItemDTOs).then(() => setLoadingStage(false))
+      .catch(() => setLoadingStage(false));
+  }
   function handleAddQty() {
+    setCurrentComponentID(props.id);
     setShoppingCart((oldShoppingCart) => {
       return oldShoppingCart.reduce<shoppingCartItemProps[]>((prev, item) => {
-        if (item.id === id) {
-          prev.push({
-            ...item,
-            quantity: quantity + 1,
-          });
-        } else {
-          prev.push(item);
-        }
+        if (item.id === id) { prev.push({ ...item, quantity: quantity + 1, shippingFee: null }); }
+        else { prev.push(item); }
         return prev;
       }, []);
     });
   }
-
   function handleRemoveQty() {
+    setCurrentComponentID(props.id);
     setShoppingCart((oldShoppingCart) => {
       return oldShoppingCart.reduce<shoppingCartItemProps[]>((prev, item) => {
-        if (item.id === id) {
-          prev.push({
-            ...item,
-            quantity: quantity - 1,
-          });
-        } else {
-          prev.push(item);
-        }
+        if (item.id === id) { prev.push({ ...item, quantity: quantity - 1, shippingFee: null }); }
+        else { prev.push(item); }
         return prev;
       }, []);
     });
   }
-
-  function deleteItem() {
+  async function deleteItem() {
+    setLoadingStage(true)
+    await deleteCartItem(props.id, currentUser?.id + "")
+      .then(() => setLoadingStage(false))
+      .catch(() => setLoadingStage(false));
     setShoppingCart((oldShoppingCart) => {
       return [...oldShoppingCart.filter((i) => i.id !== id)];
     });
+
   }
+  async function getShippingFeeOnclick() {
+    if (!gHNAvailableServicesDTOs.contents?.content) {
+      enqueueSnackbar("Please update your location", { variant: "error" });
+    } else
+      if (!gHNAvailableServicesSelected) {
+        enqueueSnackbar(`Error: Please select available shipping services.`, { variant: 'error' });
+      } else {
+        setLoadingStage(true);
+        try {
+          const shippingFee = await getShippingFee(currentUser?.id + "", gHNAvailableServicesSelected, id).then(
+            (response) => { return (Number(response.content) / 25000) });
+          setShoppingCart((oldShoppingCart) => {
+            return oldShoppingCart.reduce<shoppingCartItemProps[]>((prev, item) => {
+              if (item.id === id) { prev.push({ ...item, shippingFee: shippingFee, }); }
+              else { prev.push(item); }
+              return prev;
+            }, []);
+          });
+        } catch (error) {
+          enqueueSnackbar(`Error: Please update your location.`, { variant: 'error' });
+        }
+        setLoadingStage(false);
 
-  const handleBuyClick = async () => {
+
+      }
+  }
+  async function handleBuyClick() {
     setLoading(true);
-    const response = await buyBook(id, {
-      userID: currentUserId?.id + "",
-      quality: quantity,
-    });
-    if (response.error) {
-      enqueueSnackbar(`Error: ${response.error}.`, {
-        variant: 'error',
+    const response = await buyBook({ bookId: Number(id), userId: Number(currentUser?.id), serviceId: Number(gHNAvailableServicesSelected) });
+    const ordersResponseDTO: OrdersResponseDTO | undefined = response.content;
+    if (ordersResponseDTO?.status != 200) {
+      enqueueSnackbar(ordersResponseDTO?.message, { variant: 'error' });
+    } else {
+      setShoppingCart((oldShoppingCart) => {
+        return oldShoppingCart.filter((i) => i.id !== id);
       });
-      setLoading(false);
-      return;
+      enqueueSnackbar("Buy success", { variant: 'success' });
     }
-    enqueueSnackbar(`${response.content?.message}`, {
-      variant: 'success',
-    });
     setLoading(false);
-    setShoppingCart((oldShoppingCart) => {
-      return oldShoppingCart.filter((i) => i.id !== id);
-    });
-  };
 
+
+  };
+  if (loadingStage) { return <Loading /> }
   return (
     <>
       <div className='card card-side bg-base-100 shadow-xl'>
         <figure>
           <Image
-            src={`https://picsum.photos/seed/${id}/200/300`}
+            src={`https://itbook.store/img/books/${id}.png`}
             alt={title}
             width={150}
             height={225}
+            unoptimized
           />
         </figure>
         <div className='card-body'>
@@ -117,6 +144,8 @@ export default function ShoppingCartListItem(props: shoppingCartItemProps) {
             <p>
               <span className='text-lg font-bold pr-4'>Price:</span>
               {`$ ${currencyFormat(price)}`}
+              <span className='text-lg font-bold pr-4 ml-60'>Shipping fee:</span>
+              {shippingFee ? `$ ${currencyFormat(shippingFee)}` : 'Plaese get shipping fee'}
             </p>
             <p>
               <span className='text-lg font-bold pr-4'>In stock:</span>
@@ -162,11 +191,14 @@ export default function ShoppingCartListItem(props: shoppingCartItemProps) {
               </button>
               <button
                 className='btn btn-sm btn-info'
-                onClick={handleBuyClick}
+                onClick={() => {
+                  if (shippingFee) { handleBuyClick(); }
+                  else { getShippingFeeOnclick() }
+                }}
                 disabled={loading}
               >
                 {loading && <span className='loading loading-spinner' />}
-                Proceed to Purchase
+                {shippingFee ? `Proceed to Purchase` : 'Get shipping fee'}
               </button>
             </div>
           </div>

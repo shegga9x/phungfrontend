@@ -14,7 +14,6 @@ const Book: NextPage = () => {
   const params = useParams();
   const id = params.id;
   const [, setBookDetailsId] = useRecoilState(bookDetailsIdState);
-  // const bookDetailsLodable = useRecoilValueLoadable(bookDetailsQuery);
   React.useEffect(() => {
     id && setBookDetailsId(id as string);
   }, [id, setBookDetailsId]);

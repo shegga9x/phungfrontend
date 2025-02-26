@@ -1,6 +1,51 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2025-02-16 22:07:24.
+// Generated using typescript-generator version 3.2.1263 on 2025-02-20 20:21:12.
+
+import { shoppingCartItemProps } from "@/const";
+
+export interface GHNAvailableServicesDTO {
+    serviceId: number;
+    shortName: string;
+    serviceTypeId: number;
+}
+
+export interface GHNDistrictDTO {
+    type: number;
+    supportType: number;
+    districtID: number;
+    provinceID: number;
+    districtName: string;
+    code: string;
+}
+
+export interface GHNFeeResponseDTO {
+    total: number;
+    service_fee: number;
+    insurance_fee: number;
+    pick_station_fee: number;
+    coupon_value: number;
+    r2s_fee: number;
+    document_return: number;
+    double_check: number;
+    cod_fee: number;
+    pick_remote_areas_fee: number;
+    deliver_remote_areas_fee: number;
+    cod_failed_fee: number;
+    return_again: number;
+}
+
+export interface GHNProvinceDTO {
+    code: string;
+    provinceID: number;
+    provinceName: string;
+}
+
+export interface GHNWardDTO {
+    wardCode: number;
+    districtID: number;
+    wardName: string;
+}
 
 export interface Notification {
     id: number;
@@ -45,8 +90,8 @@ export interface NotificationSubscribersByDate {
 
 export interface NotificationsByDate {
     date: string;
-    sent: number;
     delivered: number;
+    sent: number;
 }
 
 export interface UploadedFile extends AbstractEntity {
@@ -73,6 +118,7 @@ export interface Books extends Serializable {
     publishedAt: Date;
     stock: number;
     price: number;
+    subtitle: string;
 }
 
 export interface Orders extends Serializable {
@@ -92,6 +138,29 @@ export interface Ratings extends Serializable {
     ratedAt: Date;
     books: Books;
     user: User;
+}
+
+export interface ShippingInfo extends Serializable {
+}
+
+export interface ShippingInfoDTO extends Serializable {
+    id?: number;
+    createdAt?: Date;
+    disctrictId: number;
+    name: string;
+    phoneNumber: string;
+    provinceId: number;
+    wardCode: number;
+    userId: number;
+    address: string;
+    user?: UserDTO;
+}
+
+export interface OrderRequest extends Serializable {
+    bookId: number | null;
+    userId: number;
+    serviceId: number;
+
 }
 
 export interface PasswordResetToken extends AbstractEntity {
@@ -167,6 +236,33 @@ export interface LoginRequest {
     password: string;
 }
 
+export interface Item {
+    name: string;
+    quantity: number;
+    height: number;
+    weight: number;
+    length: number;
+    width: number;
+}
+
+export interface CartItemDTO extends Serializable {
+    bookId: number;
+    userId: number;
+    quantity: number;
+    createdAt?: Date;
+    books?: BooksDTO;
+    user?: UserDTO;
+}
+
+export interface CartItem {
+    bookId: number;
+    userId: number;
+    quantity: number;
+    createdAt: Date;
+    users: User;
+    books: Books;
+}
+
 export interface AbstractEntity {
     id: number;
 }
@@ -189,6 +285,7 @@ export interface BooksDTO extends Serializable {
     publishedAt: Date;
     stock: number;
     price: number;
+    subtitle: string;
 }
 
 export interface OrdersDTO extends Serializable {
@@ -202,9 +299,11 @@ export interface OrdersDTO extends Serializable {
 }
 
 export interface OrdersResponseDTO extends Serializable {
-    orderDTO: OrdersDTO;
-    cost: number;
-    remain: number;
+    orderDTO?: OrdersDTO;
+    cost?: number;
+    remain?: number;
+    message : string;
+    status : number;
 }
 
 export interface RatingsDTO extends Serializable {
@@ -212,9 +311,9 @@ export interface RatingsDTO extends Serializable {
     userId: number;
     score: number;
     ratedAt: Date;
-    books?: BooksDTO | null;
-    user?: UserDTO | null;
-    userDTO?: UserDTO | null;
+    books?: BooksDTO;
+    user?: UserDTO;
+    userDTO?: UserDTO;
 }
 
 export interface UserDTO extends Serializable {
@@ -230,12 +329,12 @@ export interface GrantedAuthority extends Serializable {
 
 export interface UserDetails extends Serializable {
     enabled: boolean;
-    password: string;
-    username: string;
     authorities: GrantedAuthority[];
+    accountNonExpired: boolean;
     accountNonLocked: boolean;
     credentialsNonExpired: boolean;
-    accountNonExpired: boolean;
+    password: string;
+    username: string;
 }
 
 export interface MultipartFile extends InputStreamSource {
@@ -310,9 +409,9 @@ export interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
     parent: ApplicationContext;
     id: string;
     displayName: string;
-    applicationName: string;
     autowireCapableBeanFactory: AutowireCapableBeanFactory;
     startupDate: number;
+    applicationName: string;
 }
 
 export interface ServletContext {
@@ -320,8 +419,6 @@ export interface ServletContext {
     majorVersion: number;
     minorVersion: number;
     attributeNames: Enumeration<string>;
-    contextPath: string;
-    defaultSessionTrackingModes: SessionTrackingMode[];
     effectiveSessionTrackingModes: SessionTrackingMode[];
     effectiveMajorVersion: number;
     effectiveMinorVersion: number;
@@ -344,6 +441,8 @@ export interface ServletContext {
     sessionTimeout: number;
     requestCharacterEncoding: string;
     responseCharacterEncoding: string;
+    defaultSessionTrackingModes: SessionTrackingMode[];
+    contextPath: string;
 }
 
 export interface AbstractUrlBasedView extends AbstractView, InitializingBean {
@@ -424,9 +523,9 @@ export interface SessionCookieConfig {
     name: string;
     path: string;
     comment: string;
+    secure: boolean;
     domain: string;
     httpOnly: boolean;
-    secure: boolean;
     maxAge: number;
 }
 
@@ -459,11 +558,15 @@ export interface PropertyResolver {
 export interface ResourceLoader {
     classLoader: ClassLoader;
 }
-
+export interface VNPayRequest {
+    serviceId: number | null;
+    bookId: string;
+    userId: number | undefined;
+}
 export interface ServletConfig {
-    servletContext: ServletContext;
     initParameterNames: Enumeration<string>;
     servletName: string;
+    servletContext: ServletContext;
 }
 
 export interface Registration {
@@ -479,7 +582,6 @@ export interface TaglibDescriptor {
 
 export interface JspPropertyGroupDescriptor {
     buffer: string;
-    deferredSyntaxAllowedAsLiteral: string;
     urlPatterns: string[];
     elIgnored: string;
     pageEncoding: string;
@@ -490,6 +592,7 @@ export interface JspPropertyGroupDescriptor {
     trimDirectiveWhitespaces: string;
     defaultContentType: string;
     errorOnUndeclaredNamespace: string;
+    deferredSyntaxAllowedAsLiteral: string;
 }
 
 export interface WebApplicationObjectSupport extends ApplicationObjectSupport, ServletContextAware {
@@ -789,6 +892,50 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP GET /api/v1/ghn/available-services
+     * Java method: com.example.backend.ghn.GHNController.getAvailableServices
+     */
+    getAvailableServices(queryParams: { user_id: number; }): RestResponse<GHNAvailableServicesDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/ghn/available-services?user_id=` + queryParams.user_id, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP GET /api/v1/ghn/districts
+     * Java method: com.example.backend.ghn.GHNController.getDistricts
+     */
+    getDistricts(queryParams: { province_id: number; }): RestResponse<GHNDistrictDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/ghn/districts?province_id=${queryParams.province_id}`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP POST /api/v1/ghn/fee
+     * Java method: com.example.backend.ghn.GHNController.getFee
+     */
+    getFee(queryParams: { service_id: number; bookId: String; userId: number; }): RestResponse<GHNFeeResponseDTO> {
+        return this.httpClient.request({
+            method: "GET", url: uriEncoding`api/v1/ghn/fee?bookId=` + queryParams.bookId
+                + `&&service_id=` + queryParams.service_id
+                + `&&userId=` + queryParams.userId, queryParams: queryParams
+        });
+    }
+
+    /**
+     * HTTP GET /api/v1/ghn/provinces
+     * Java method: com.example.backend.ghn.GHNController.getProvinces
+     */
+    getProvinces(): RestResponse<GHNProvinceDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/ghn/provinces` });
+    }
+
+    /**
+     * HTTP GET /api/v1/ghn/wards
+     * Java method: com.example.backend.ghn.GHNController.getWards
+     */
+    getWards(queryParams: { district_id: number; }): RestResponse<GHNWardDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/ghn/wards?district_id=${queryParams.district_id}`, queryParams: queryParams });
+    }
+
+    /**
      * HTTP POST /api/v1/orders
      * Java method: com.example.backend.telosys.rest.controllers.OrdersRestController.create
      */
@@ -816,8 +963,8 @@ export class RestApplicationClient {
      * HTTP POST /api/v1/orders/buybook
      * Java method: com.example.backend.telosys.rest.controllers.OrdersRestController.buyBook
      */
-    buyBook(ordersDTO: OrdersDTO): RestResponse<OrdersResponseDTO> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/orders/buybook`, data: ordersDTO });
+    buyBook(orderRequest: OrderRequest): RestResponse<OrdersResponseDTO> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/orders/buybook`, data: orderRequest });
     }
 
     /**
@@ -917,6 +1064,68 @@ export class RestApplicationClient {
     }
 
     /**
+     * HTTP POST /api/v1/shippinginfo
+     * Java method: com.example.backend.telosys.rest.controllers.ShippingInfoRestController.create
+     */
+    create$POST$api_v1_shippinginfo(shippingInfoDTO: ShippingInfoDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/shippinginfo`, data: shippingInfoDTO });
+    }
+
+    /**
+     * HTTP GET /api/v1/shippinginfo
+     * Java method: com.example.backend.telosys.rest.controllers.ShippingInfoRestController.findAll
+     */
+    findAll$GET$api_v1_shippinginfo(): RestResponse<ShippingInfoDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/shippinginfo` });
+    }
+
+    /**
+     * HTTP PUT /api/v1/shippinginfo
+     * Java method: com.example.backend.telosys.rest.controllers.ShippingInfoRestController.update
+     */
+    update$PUT$api_v1_shippinginfo(shippingInfoDTO: ShippingInfoDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/shippinginfo`, data: shippingInfoDTO });
+    }
+
+    /**
+     * HTTP DELETE /api/v1/shippinginfo/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.ShippingInfoRestController.deleteById
+     */
+    deleteById$DELETE$api_v1_shippinginfo_id(id: number): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`api/v1/shippinginfo/${id}` });
+    }
+
+    /**
+     * HTTP GET /api/v1/shippinginfo/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.ShippingInfoRestController.findById
+     */
+    findById$GET$api_v1_shippinginfo_id(id: number): RestResponse<ShippingInfoDTO> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/shippinginfo/${id}` });
+    }
+    /**
+         * HTTP GET /api/v1/shippinginfo/{userId}
+         * Java method: com.example.backend.telosys.rest.controllers.ShippingInfoRestController.findByUserId
+         */
+    findByUserId(userId: number): RestResponse<ShippingInfoDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/shippinginfo/user/${userId}` });
+    }
+    /**
+     * HTTP PATCH /api/v1/shippinginfo/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.ShippingInfoRestController.partialUpdate
+     */
+    partialUpdate$PATCH$api_v1_shippinginfo_id(id: number, shippingInfoDTO: ShippingInfoDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/v1/shippinginfo/${id}`, data: shippingInfoDTO });
+    }
+
+    /**
+     * HTTP PUT /api/v1/shippinginfo/{id}
+     * Java method: com.example.backend.telosys.rest.controllers.ShippingInfoRestController.save
+     */
+    save$PUT$api_v1_shippinginfo_id(id: number, shippingInfoDTO: ShippingInfoDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/shippinginfo/${id}`, data: shippingInfoDTO });
+    }
+
+    /**
      * HTTP POST /api/v1/user
      * Java method: com.example.backend.telosys.rest.controllers.UserRestController.create
      */
@@ -970,6 +1179,106 @@ export class RestApplicationClient {
      */
     save$PUT$api_v1_user_id(id: number, userDTO: UserDTO): RestResponse<void> {
         return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/user/${id}`, data: userDTO });
+    }
+
+    /**
+ * HTTP POST /api/v1/vnp/submitOrder
+ * Java method: com.example.backend.vnpay.VNPController.submidOrder
+ */
+    submidOrder(queryParams: { userId: number, amount: number }): RestResponse<string> {
+        return this.httpClient.request({
+            method: "POST", url: uriEncoding`api/v1/vnp/submitOrder?userId=` + queryParams.userId
+                + "&amount=" + queryParams.amount, queryParams: queryParams
+        });
+    }
+
+    /**
+     * HTTP GET /api/v1/vnp/vnpay-payment-return
+     * Java method: com.example.backend.vnpay.VNPController.paymentCompleted
+     */
+    paymentCompleted(): RestResponse<RedirectView> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/vnp/vnpay-payment-return` });
+    }
+
+    /**
+     * HTTP POST /api/v1/cartitem
+     * Java method: com.example.backend.telosys.rest.controllers.CartItemRestController.create
+     */
+    create$POST$api_v1_cartitem(cartItemDTO: CartItemDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/cartitem`, data: cartItemDTO });
+    }
+
+    /**
+     * HTTP GET /api/v1/cartitem
+     * Java method: com.example.backend.telosys.rest.controllers.CartItemRestController.findAll
+     */
+    findAll$GET$api_v1_cartitem(): RestResponse<CartItemDTO[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/cartitem` });
+    }
+
+    /**
+     * HTTP PUT /api/v1/cartitem
+     * Java method: com.example.backend.telosys.rest.controllers.CartItemRestController.update
+     */
+    update$PUT$api_v1_cartitem(cartItemDTO: CartItemDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/cartitem`, data: cartItemDTO });
+    }
+
+    /**
+     * HTTP POST /api/v1/cartitem/add
+     * Java method: com.example.backend.telosys.rest.controllers.CartItemRestController.addToCart
+     */
+    addToCart(cartItemDTO: CartItemDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/cartitem/add`, data: cartItemDTO });
+    }
+
+    /**
+     * HTTP GET /api/v1/cartitem/user/{userId}
+     * Java method: com.example.backend.telosys.rest.controllers.CartItemRestController.findByUserId
+     */
+    findByUserId$GET$api_v1_cartitem_user_userId(userId: number): RestResponse<shoppingCartItemProps[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/cartitem/user/${userId} ` });
+    }
+
+    /**
+     * HTTP DELETE /api/v1/cartitem/{bookId}/{userId}
+     * Java method: com.example.backend.telosys.rest.controllers.CartItemRestController.deleteById
+     */
+    deleteById$DELETE$api_v1_cartitem_bookId_userId(bookId: number, userId: number): RestResponse<void> {
+        return this.httpClient.request({
+            method: "DELETE", url: uriEncoding`api/v1/cartitem/ ${bookId}/${userId}`
+        });
+    }
+
+    /**
+     * HTTP GET /api/v1/cartitem/{bookId}/{userId}
+     * Java method: com.example.backend.telosys.rest.controllers.CartItemRestController.findById
+     */
+    findById$GET$api_v1_cartitem_bookId_userId(bookId: number, userId: number): RestResponse<CartItemDTO> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/v1/cartitem/${bookId}/${userId}` });
+    }
+
+    /**
+     * HTTP PATCH /api/v1/cartitem/{bookId}/{userId}
+     * Java method: com.example.backend.telosys.rest.controllers.CartItemRestController.partialUpdate
+     */
+    partialUpdate$PATCH$api_v1_cartitem_bookId_userId(bookId: number, userId: number, cartItemDTO: CartItemDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/v1/cartitem/${bookId}/${userId}`, data: cartItemDTO });
+    }
+
+    /**
+     * HTTP PUT /api/v1/cartitem/{bookId}/{userId}
+     * Java method: com.example.backend.telosys.rest.controllers.CartItemRestController.save
+     */
+    save$PUT$api_v1_cartitem_bookId_userId(bookId: number, userId: number, cartItemDTO: CartItemDTO): RestResponse<void> {
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/v1/cartitem/${bookId}/${userId}`, data: cartItemDTO });
+    }
+    /**
+        * HTTP POST /api/v1/cartitem/list
+        * Java method: com.example.backend.telosys.rest.controllers.CartItemRestController.addOrUpdateList
+        */
+    addOrUpdateList(cartItemDTOList: CartItemDTO[]): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/cartitem/list`, data: cartItemDTOList });
     }
 }
 

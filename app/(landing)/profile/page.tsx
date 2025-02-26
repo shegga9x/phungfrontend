@@ -35,16 +35,12 @@ export default function ProfilePage() {
     <Container size="sm">
       <div className="flex flex-col gap-y-4">
         <h1 className="text-2xl font-semibold">Welcome back, {user.firstName}</h1>
-        
         <UpdateProfileImageForm />
         <Divider />
-
         <UpdateBasicDetailsForm />
         <Divider />
-
         <UpdatePasswordForm />
         <Divider />
-
         <h2 className="text-lg font-semibold mb-2">Connected Accounts</h2>
         <div className="flex flex-col gap-y-2">
           {user?.connectedAccounts.map((account) => (

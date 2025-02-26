@@ -1,8 +1,6 @@
-import { currentUserIdState } from '@/atoms';
 import httpClient, { restClient } from '@/lib/httpClient';
-import { Books, BooksDTO, Orders, RatingsDTO } from '@/models/backend';
+import { RatingsDTO } from '@/models/backend';
 import { NextRequest, NextResponse } from 'next/server';
-import { useRecoilValue } from 'recoil';
 
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
@@ -10,7 +8,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     if (!id || isNaN(Number(id))) {
         return NextResponse.json({ error: "Invalid parameter `id`." }, { status: 400 });
     } else {
+
         const ratings: any[] = (await httpClient.get("api/v1/ratings/" + id)).data;
+
         return NextResponse.json({
             content: ratings,
             total: 100

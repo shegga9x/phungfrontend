@@ -6,7 +6,7 @@ import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
 import { UserResponse } from "@/models/user/UserResponse";
 import { LoginRequest } from "@/models/backend";
 import { useRecoilState } from "recoil";
-import { currentUserIdState } from "@/atoms";
+import { currentUserState } from "@/atoms";
 
 
 interface AuthProps {
@@ -19,7 +19,7 @@ export const useAuthGuard = ({
   redirectIfAuthenticated,
 }: AuthProps) => {
   const router = useRouter();
-  const [auth, setAuth] = useRecoilState(currentUserIdState);
+  const [auth, setAuth] = useRecoilState(currentUserState);
   const {
     data: user,
     error,
@@ -56,7 +56,6 @@ export const useAuthGuard = ({
     if (!error) {
       await restClient.logout().then(() => mutate());
     }
-
     window.location.pathname = "/auth/login";
   };
 

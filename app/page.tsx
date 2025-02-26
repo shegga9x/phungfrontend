@@ -41,7 +41,7 @@ const Home: NextPage = () => {
         <div className='flex justify-center pt-6'>
           <Pagination
             currentPage={homePageQueryData?.page || 1}
-            pages={Math.ceil(homePageBookSum / PAGE_SIZE)}
+            totalPages={Math.ceil(homePageBookSum / PAGE_SIZE)}
             onClick={handleClickPagination}
           />
         </div>

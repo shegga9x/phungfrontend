@@ -6,19 +6,19 @@ import { BookDetailProps, BookType } from '@/const';
 import { currencyFormat, checkIsValidInteger } from '@/lib/utils';
 import { updateBookDetails } from '@/lib/http';
 import { useRecoilState } from 'recoil';
-import { currentUserIdState } from '@/atoms';
+import { currentUserState } from '@/atoms';
 import { Role } from '@/models/user/UserResponse';
 
 export interface BookInfoDialogProps {
   data: BooksDTO;
   id: string;
-  onSuccess: (bookDTO : Books) => void;
+  onSuccess: (bookDTO: BooksDTO) => void;
 }
 
 const BookInfoDialog = React.forwardRef(
   (props: BookInfoDialogProps, ref: any) => {
 
-    const [auth] = useRecoilState(currentUserIdState);
+    const [auth] = useRecoilState(currentUserState);
     const { data, id, onSuccess } = props;
     const [bookDTO, setBookDTO] = React.useState<BooksDTO>(data);
     const [isUpdating, setIsUpdating] = React.useState<boolean>(false);

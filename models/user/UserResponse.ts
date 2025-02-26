@@ -5,12 +5,13 @@ export interface UserResponse {
   lastName?: string;
   email: string;
   profileImageUrl?: string;
+  balance: number;
   connectedAccounts: ConnectedAccount[];
   authorities: string[]
 }
 
 interface ConnectedAccount {
-  provider: 'google' | 'github' | 'facebook' | 'okta' ;
+  provider: 'google' | 'github' | 'facebook' | 'okta';
   connectedAt: string;
 }
 
