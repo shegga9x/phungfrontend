@@ -53,16 +53,6 @@ export const PAGE_SIZE = 6;
 
 export const SORT_VALUE = ['published_at', 'price'];
 export enum BookType {
-  Magazine = 'Magazine',
-  Novel = 'Novel',
-  Life = 'Life',
-  Arts = 'Arts',
-  Comics = 'Comics',
-  EducationReference = 'Education & Reference',
-  HumanitiesSocialSciences = 'Humanities & Social Sciences',
-  ScienceTechnology = 'Science & Technology',
-  Kids = 'Kids',
-  Sports = 'Sports',
   NET_Framework = ".NET Framework",
   ThreeD = "3D",
   ActionScript = "ActionScript",

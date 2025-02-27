@@ -6,8 +6,8 @@ import httpClient from "@/lib/httpClient";
 import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
 import { Button, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
+import { useSnackbar } from "notistack";
 import React from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 
 const schema = z
@@ -24,6 +24,8 @@ const schema = z
 type Schema = z.infer<typeof schema>;
 export default function UpdatePasswordForm() {
   const { user, mutate } = useAuthGuard({ middleware: "auth" });
+  const { enqueueSnackbar } = useSnackbar();
+
   const [errors, setErrors] = React.useState<HttpErrorResponse | undefined>(
     undefined
   );
@@ -33,7 +35,8 @@ export default function UpdatePasswordForm() {
     httpClient
       .patch("/api/users/password", data)
       .then(() => {
-        toast.success("Password updated successfully");
+        enqueueSnackbar('Password updated successfully', { variant: 'success' });
+
         mutate();
       })
       .catch((error) => {
@@ -53,18 +56,18 @@ export default function UpdatePasswordForm() {
 
   return (
     <div className="max-w-screen-sm">
-        <form
-          onSubmit={form.onSubmit(onSubmit)}
-          className="flex flex-col gap-y-2"
-        >
-          <TextInput type="password" {...form.getInputProps('oldPassword')} label="Old password"></TextInput>
-          <TextInput type="password" {...form.getInputProps('password')} label="New password"></TextInput>
-          <TextInput type="password" {...form.getInputProps('confirmPassword')} label="Confirm password"></TextInput>
+      <form
+        onSubmit={form.onSubmit(onSubmit)}
+        className="flex flex-col gap-y-2"
+      >
+        <TextInput type="password" {...form.getInputProps('oldPassword')} label="Old password"></TextInput>
+        <TextInput type="password" {...form.getInputProps('password')} label="New password"></TextInput>
+        <TextInput type="password" {...form.getInputProps('confirmPassword')} label="Confirm password"></TextInput>
 
-          <Button type="submit">Update password</Button>
-        </form>
+        <Button type="submit">Update password</Button>
+      </form>
 
-      <ErrorFeedback data={errors} className="mt-2"/>
+      <ErrorFeedback data={errors} className="mt-2" />
     </div>
   );
 }

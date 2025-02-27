@@ -6,8 +6,8 @@ import httpClient, { restClient } from "@/lib/httpClient";
 import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
 import { Button, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
+import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 
 const schema = z.object({
@@ -19,13 +19,14 @@ type Schema = z.infer<typeof schema>;
 export default function UpdateBasicDetailsForm() {
   const { user, mutate } = useAuthGuard({ middleware: "auth" });
   const [errors, setErrors] = React.useState<HttpErrorResponse | undefined>(undefined);
+  const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit = (data: Schema) => {
     setErrors(undefined);
     restClient.updateUser(user!.id.toString(), data)
       .then((as) => {
-        toast.success("Profile updated successfully");
         mutate();
+        enqueueSnackbar('Profile updated successfully', { variant: 'success' });
       })
       .catch((error) => {
         const errData = error.response.data as HttpErrorResponse;
@@ -50,15 +51,15 @@ export default function UpdateBasicDetailsForm() {
 
   return (
     <div className="max-w-screen-sm">
-        <form
-          onSubmit={form.onSubmit(onSubmit)}
-          className="flex flex-col gap-y-2"
-        >
-          <TextInput {...form.getInputProps('firstName')} label="First name" />
-          <TextInput {...form.getInputProps('lastName')} label="Last name" />
+      <form
+        onSubmit={form.onSubmit(onSubmit)}
+        className="flex flex-col gap-y-2"
+      >
+        <TextInput {...form.getInputProps('firstName')} label="First name" />
+        <TextInput {...form.getInputProps('lastName')} label="Last name" />
 
-          <Button type="submit">Update profile</Button>
-        </form>
+        <Button type="submit">Update profile</Button>
+      </form>
 
       <ErrorFeedback data={errors} />
     </div>

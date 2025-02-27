@@ -8,12 +8,12 @@ import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
 import { Button, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import Link from "next/link";
+import { useSnackbar } from "notistack";
 import React from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
-
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
+const { enqueueSnackbar } = useSnackbar();
 const registerSchema = z
   .object({
     email: z.string().email(),
@@ -41,7 +41,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true);
     restClient.createUser(data)
       .then(() => {
-        toast.success("Account created successfully");
+        enqueueSnackbar('Account created successfully', { variant: 'success' });
         setSuccess(true);
       })
       .catch((error) => {
@@ -134,7 +134,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
           <ErrorFeedback data={errors} />
 
           <Button disabled={isLoading} type="submit">
-            {isLoading ? 'Creating account...': 'Create account'}
+            {isLoading ? 'Creating account...' : 'Create account'}
           </Button>
         </div>
       </form>
