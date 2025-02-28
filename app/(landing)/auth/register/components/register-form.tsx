@@ -13,7 +13,6 @@ import React from "react";
 import { z } from "zod";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
-const { enqueueSnackbar } = useSnackbar();
 const registerSchema = z
   .object({
     email: z.string().email(),
@@ -34,6 +33,7 @@ export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
   const [errors, setErrors] = React.useState<HttpErrorResponse | undefined>(
     undefined
   );
+  const { enqueueSnackbar } = useSnackbar();
 
   async function onSubmit(data: Schema) {
     setErrors(undefined);
