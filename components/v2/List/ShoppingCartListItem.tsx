@@ -13,7 +13,7 @@ import Loading from '@/components/loading';
 import { useRouter } from "next/navigation";
 
 export default function ShoppingCartListItem(props: shoppingCartItemProps) {
-  const { id, title, authors, type, price, averageRating, quantity, stock, publishedAt, shippingFee } = props;
+  const { id, title, authors, type, price, averageRating, quantity, stock, publishedAt, shippingFee, urlImg } = props;
   const [loading, setLoading] = React.useState(false);
   const [loadingStage, setLoadingStage] = React.useState(false);
   const [gHNAvailableServicesSelected] = useRecoilState(gHNAvailableServicesSelectedState);
@@ -120,7 +120,7 @@ export default function ShoppingCartListItem(props: shoppingCartItemProps) {
       <div className='card card-side bg-base-100 shadow-xl'>
         <figure>
           <Image
-            src={`https://itbook.store/img/books/${id}.png`}
+            src={`${urlImg}`}
             alt={title}
             width={150}
             height={225}

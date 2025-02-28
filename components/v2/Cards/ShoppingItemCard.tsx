@@ -24,6 +24,7 @@ export default function ShoopingItemCard(props: BookProps) {
     authors,
     ratings,
     stock,
+    urlImg
   } = props;
   const [shoppingCart, setShoppingCart] = useRecoilState(cartSelector);
   const [loadingStage, setLoadingStage] = React.useState(false);
@@ -101,7 +102,7 @@ export default function ShoopingItemCard(props: BookProps) {
     <div className='card card-compact w-96 bg-base-100 shadow-xl'>
       <figure>
         <Image
-          src={`https://itbook.store/img/books/${id}.png`}
+          src={`${urlImg}`}
           alt={title}
           width={384}
           height={70}

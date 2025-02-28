@@ -14,6 +14,7 @@ export interface BookProps {
   averageRating: number;
   ratings: number;
   shippingFee: number | null;
+  urlImg: string;
 }
 
 export interface shoppingCartItemProps extends BookProps {

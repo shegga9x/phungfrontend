@@ -47,7 +47,7 @@ export default function BookInfoSection() {
           <div className='hero h-auto justify-start shadow-xl rounded-box'>
             <div className='hero-content flex-col lg:flex-row'>
               <Image
-                src={`https://itbook.store/img/books/${data.id}.png`}
+                src={`${data.urlImg}`}
                 alt={`book image`}
                 width={200}
                 height={280}

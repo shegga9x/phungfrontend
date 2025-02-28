@@ -286,6 +286,7 @@ export interface BooksDTO extends Serializable {
     stock: number;
     price: number;
     subtitle: string;
+    urlImg: string;
 }
 
 export interface OrdersDTO extends Serializable {
