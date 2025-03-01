@@ -25,10 +25,11 @@ export const useAuthGuard = ({
     error,
     mutate,
   } = useSWR("/api/auth/me", () =>
-    httpClient.get<UserResponse>("/api/auth/me").then((res) => {
-      setAuth(res.data);
-      return res.data;
-    })
+    httpClient.get<UserResponse>("/api/auth/me", { withCredentials: true })
+      .then((res) => {
+        setAuth(res.data);
+        return res.data;
+      })
   );
 
   const login = async ({
