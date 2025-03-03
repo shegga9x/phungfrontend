@@ -13,7 +13,6 @@ interface AuthProps {
   middleware?: "auth" | "guest";
   redirectIfAuthenticated?: string;
 }
-
 export const useAuthGuard = ({
   middleware,
   redirectIfAuthenticated,
@@ -25,13 +24,12 @@ export const useAuthGuard = ({
     error,
     mutate,
   } = useSWR("/api/auth/me", () =>
-    httpClient.get<UserResponse>("/api/auth/me", { withCredentials: true })
+    httpClient.get<UserResponse>("/api/auth/me")
       .then((res) => {
         setAuth(res.data);
         return res.data;
       })
   );
-
   const login = async ({
     onError,
     props,

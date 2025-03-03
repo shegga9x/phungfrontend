@@ -49,8 +49,19 @@ export default function ProfilePage() {
           <label htmlFor="balance" className="text-lg font-medium">Balance:</label>
           <TextInput id="balance" value={`$${balance}`} className="w-40 text-center" readOnly />
         </div>
-        <Button className="mt-4" onClick={handleBuyClick}>Deposit</Button>
+        <Button className="mt-4" onClick={handleBuyClick}>Deposit</Button>  <div>
+            <h1 className="text-xl font-bold text-blue-600">Đây là api test của Vnpay</h1>
+            <p className="text-gray-700">Loại thẻ quốc tế: <span className="font-semibold text-green-600">VISA (3DS)</span></p>
+            <p className="text-gray-700">Số thẻ: <span className="font-semibold text-green-600">4456 5300 0000 1096</span></p>
+            <p className="text-gray-700">CVC/CVV: <span className="font-semibold text-green-600">123</span></p>
+            <p className="text-gray-700">Tên chủ thẻ: <span className="font-semibold text-green-600">NGUYEN VAN A</span></p>
+            <p className="text-gray-700">Ngày hết hạn: <span className="font-semibold text-green-600">12/26</span></p>
+            <p className="text-gray-700">Email: <span className="font-semibold text-green-600">test@gmail.com</span></p>
+            <p className="text-gray-700">Địa chỉ: <span className="font-semibold text-green-600">22 Lang Ha</span></p>
+            <p className="text-gray-700">Thành phố: <span className="font-semibold text-green-600">Ha Noi</span></p>
+        </div>
       </div>
+
     </Container>
 
   );
