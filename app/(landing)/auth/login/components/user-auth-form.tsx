@@ -28,11 +28,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
   async function onSubmit(data: Schema) {
     login({
+      
       onError: (errors) => {
         setErrors(errors)
         if (errors) {
+          console.log(errors);
           enqueueSnackbar('Authentication failed', { variant: 'error' });
-
         }
       },
       props: data,
@@ -76,7 +77,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             />
           </div>
 
-          <ErrorFeedback data={errors} />
 
           <Button disabled={isLoading} type="submit">
             {isLoading && 'Logging in...'}
