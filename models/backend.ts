@@ -835,6 +835,7 @@ export class RestApplicationClient {
     create$POST$api_v1_books(booksDTO: BooksDTO): RestResponse<void> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`api/v1/books`, data: booksDTO });
     }
+ 
 
     /**
      * HTTP GET /api/v1/books

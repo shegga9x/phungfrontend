@@ -2,8 +2,6 @@ import { atom, atomFamily, RecoilState, selector, useRecoilState, useRecoilValue
 
 import { shoppingCartItemProps, BookProps, PAGE_SIZE } from "@/const";
 import { UserResponse } from "@/models/user/UserResponse";
-import { GHNAvailableServicesDTO, GHNProvinceDTO } from "@/models/backend";
-import { cartSelector, getCartQuery } from "@/selectors";
 
 export const homePageBookSumState = atom({
   key: "homePageBookSumState",
@@ -18,7 +16,7 @@ export const bookTypeListState = atom<string[]>({
 
 export const homePageQueryState = atom({
   key: "homePageQueryState",
-  default: { page: 0, type: "", sort: "", size: PAGE_SIZE },
+  default: { page: 0, type: "", sort: "", size: PAGE_SIZE, title: "" },
 });
 
 export const bookDetailsIdState = atom({

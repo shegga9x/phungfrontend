@@ -13,7 +13,6 @@ import Pagination from '@/components/v2/Pagination';
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useRecoilState } from 'recoil';
-import { Helmet } from 'react-helmet-async';
 
 const BookList = dynamic(() => import('@/components/v2/Cards/ShoppingItemCardList'), { ssr: false });
 

@@ -24,6 +24,7 @@ export const FilteredChips = (props: {
     type: string;
     sort: string;
     size: number;
+    title: string;
   }>;
 }) => {
   const { data, onChange } = props;

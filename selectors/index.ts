@@ -14,13 +14,12 @@ import {
   updateCart,
 } from "@/lib/http";
 import { shoppingCartItemProps } from "@/const";
-import { CartItemDTO } from "@/models/backend";
 
 export const homePageQuery = selector({
   key: "homePage",
   get: async ({ get }) => {
-    const { page, size, type, sort } = get(homePageQueryState);
-    const response = await fetchBooks({ page, size, type, sort });
+    const { page, size, type, sort, title } = get(homePageQueryState);
+    const response = await fetchBooks({ page, size, type, sort, title });
     return response;
   },
 });
@@ -116,7 +115,6 @@ export const cartSelector = selector<shoppingCartItemProps[]>({
       }
     } catch (error) {
       console.log(error);
-
     }
 
     return [];

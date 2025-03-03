@@ -1,13 +1,14 @@
 import { shoppingCartItemProps } from './../const/index';
 import axios from 'axios';
 import { BookProps, BookRatingsProps } from '@/const';
-import { Books, BooksDTO, CartItemDTO, GHNAvailableServicesDTO, OrderRequest, OrdersResponseDTO, ShippingInfoDTO, VNPayRequest } from '@/models/backend';
+import { Books, BooksDTO, BooksResponseDTO, CartItemDTO, GHNAvailableServicesDTO, OrderRequest, OrdersResponseDTO, ShippingInfoDTO, VNPayRequest } from '@/models/backend';
 
 export async function fetchBooks(data: {
   page?: number;
   size?: number;
   type?: string;
   sort?: string;
+  title?: string;
 }): Promise<{ content: BookProps[]; total: number; error?: any }> {
   try {
     const queryArray = Object.keys(data).reduce((prev: string[], item) => {
@@ -18,11 +19,9 @@ export async function fetchBooks(data: {
       return prev;
     }, []);
     const response = await axios.get(`/api/books?${queryArray.join(`&`)}`);
-
     if (response.status !== 200) {
       throw new Error(`${response.status} - ${response.data}`);
     }
-
     return response.data;
   } catch (error) {
     console.error(error);
@@ -322,5 +321,43 @@ export async function getVNPayUrl(
   } catch (error) {
     console.error(error);
     return { error, content: { message: 'Failed to get pay url' } };
+  }
+}
+
+export async function bookSearch(
+  title: String
+): Promise<{
+  content?: string[];
+  error?: any;
+}> {
+  try {
+    const response = await axios.get(`/api/books/search?title=` + title);
+    if (response.status !== 200) {
+      throw new Error(`${response.status} - ${response.data}`);
+    }
+    return { content: response.data.content };
+  } catch (error) {
+    console.error(error);
+    return { error };
+  }
+}
+
+export async function bookSearchDTO(
+  title: String
+): Promise<{
+  content?: BooksResponseDTO;
+  error?: any;
+}> {
+  try {
+    const response = await axios.post(`/api/books/search?title=` + title);
+    console.log(response);
+
+    if (response.status !== 200) {
+      throw new Error(`${response.status} - ${response.data}`);
+    }
+    return { content: response.data.content };
+  } catch (error) {
+    console.error(error);
+    return { error };
   }
 }
