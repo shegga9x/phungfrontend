@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 PhungFrontend
 
-## Getting Started
+PhungFrontend is a modern frontend application built with **Next.js**, inspired by the [Spring Boot Next.js Starter Kit](https://github.com/NerminKarapandzic/spring-boot-nextjs-starter-kit) and [TiDB Prisma Vercel Demo](https://github.com/pingcap/tidb-prisma-vercel-demo). It provides a seamless user experience for browsing and purchasing books, integrating with **PhungBackend** for authentication and data management.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm install && npm run dev
-# or
-yarn install && yarn dev
-# or
-pnpm install && pnpm dev
-# or
-bun install && bun dev
-```
+- 🎨 Built with **Next.js** and **React**
+- 🔄 API integration with **PhungBackend**
+- 🔑 User authentication (OAuth2, JWT, NextAuth.js)
+- 📚 Dynamic book browsing and searching
+- 🛍 Shopping cart and checkout flow
+- 🌎 Server-side rendering (SSR) for enhanced performance
+- 🚀 Deployed using **Vercel**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| 🚀 Layer       | 🏗 Technology |
+|--------------|--------------|
+| Frontend    | Next.js, React, Tailwind CSS |
+| API Integration | Next.js API routes, Prisma |
+| Authentication | NextAuth.js, OAuth2, JWT |
+| Deployment  | Vercel |
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 🔧 Installation & Setup
 
-## Learn More
+### 🎨 Frontend Setup
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/shegga9x/phungfrontend.git
+   cd phungfrontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Configure environment variables in `.env.local`:
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:8080
+   NEXTAUTH_SECRET=your_secret_key
+   ```
+4. Start the frontend server:
+   ```bash
+   npm run dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+## 🌍 Deployment
+PhungFrontend is optimized for **Vercel** deployment. To deploy, simply push to the main branch and Vercel will handle the rest.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🤝 Contribution
+Contributions are welcome! Feel free to submit issues or pull requests.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## 📜 License
+This project is licensed under the MIT License.
