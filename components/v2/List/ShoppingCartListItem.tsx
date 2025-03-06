@@ -2,8 +2,8 @@ import * as React from 'react';
 import Image from 'next/image';
 import { useSnackbar } from 'notistack';
 import { PlusIcon, MinusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { useRecoilState, useRecoilValueLoadable } from 'recoil';
-import { currentCartUpdateItemStage, currentUserState, gHNAvailableServicesSelectedState } from '@/atoms';
+import { useRecoilState, useRecoilValueLoadable, useSetRecoilState } from 'recoil';
+import { currentCartUpdateItemStage, currentUserState, gHNAvailableServicesSelectedState, refrshAble } from '@/atoms';
 import { shoppingCartItemProps } from '@/const';
 import { currencyFormat, calcCartItemTotalPrice } from '@/lib/utils';
 import { buyBook, deleteCartItem, getShippingFee, getVNPayUrl, updateCart } from '@/lib/http';
@@ -22,10 +22,12 @@ export default function ShoppingCartListItem(props: shoppingCartItemProps) {
   const [currentComponentID, setCurrentComponentID] = useRecoilState(currentCartUpdateItemStage);
   const gHNAvailableServicesDTOs = useRecoilValueLoadable(getAvailableServicesQuery);
   const { enqueueSnackbar } = useSnackbar();
-
+  const setRefrshAble = useSetRecoilState(refrshAble);
   React.useEffect(() => {
     if (shoppingCart && currentComponentID === props.id) {
+      setRefrshAble(true);
       updateCart1(shoppingCart);
+
     }
     setCurrentComponentID("")
   }, [currentComponentID]);
@@ -39,7 +41,10 @@ export default function ShoppingCartListItem(props: shoppingCartItemProps) {
         createdAt: new Date(),
       };
     });
-    updateCart(cartItemDTOs).then(() => setLoadingStage(false))
+    updateCart(cartItemDTOs).then(() => {
+      setLoadingStage(false);
+      setRefrshAble(false);
+    })
       .catch(() => setLoadingStage(false));
   }
   function handleAddQty() {

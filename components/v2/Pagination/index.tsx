@@ -27,7 +27,7 @@ export default function Pagination(props: PaginationProps) {
   return (
     <div className='join'>
 
-      <button className={`join-item btn btn-sm`} onClick={() => onClick && onClick(currentPage - 1)} disabled={currentPage === 1}>
+      <button className={`join-item btn btn-sm`} onClick={() => onClick && onClick(currentPage - 1)} disabled={currentPage === 1 || totalPages === 0}>
         Prev
       </button>
 
@@ -42,7 +42,7 @@ export default function Pagination(props: PaginationProps) {
           </button>
         ))}
       <button onClick={() => onClick && onClick(currentPage + 1)} className={`join-item btn btn-sm`}
-        disabled={currentPage === totalPages}>
+        disabled={currentPage === totalPages || totalPages === 0}>
         Next
       </button>
 

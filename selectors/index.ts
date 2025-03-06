@@ -1,7 +1,8 @@
 import { selector, selectorFamily } from "recoil";
 import {
   bookDetailsIdState, cartLoadingStage,
-  cartState, currentUserState, homePageQueryState
+  cartState, currentUserState, homePageQueryState,
+  refrshAble
 } from "@/atoms";
 import {
   fetchBookDetailsById,
@@ -101,6 +102,10 @@ export const getCartQuery = selector<shoppingCartItemProps[]>({
 export const cartSelector = selector<shoppingCartItemProps[]>({
   key: "cartSelector",
   get: async ({ get }) => {
+    const isRefrshAble = get(refrshAble); // Get tab state
+    if (!isRefrshAble) {
+      return []; // Return previous state instead of fetching
+    }
     const user = get(currentUserState);
     const numericUserId = Number(user?.id); // Ensure it's a number
     if (!numericUserId) return []; // If userId is invalid, return empty

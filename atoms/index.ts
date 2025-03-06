@@ -8,7 +8,6 @@ export const homePageBookSumState = atom({
   default: 0,
 });
 
-
 export const bookTypeListState = atom<string[]>({
   key: "bookTypeListState",
   default: [],
@@ -47,4 +46,10 @@ export const currentCartUpdateItemStage = atom({
 export const gHNAvailableServicesSelectedState = atom<number | null>({
   key: "gHNAvailableServicesSelectedState",
   default: null, // Initially not loading
+});
+
+
+export const refrshAble = atom({
+  key: "refrshAble",
+  default: true, // Default to true since the user starts on the page
 });
