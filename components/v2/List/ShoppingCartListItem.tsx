@@ -22,12 +22,9 @@ export default function ShoppingCartListItem(props: shoppingCartItemProps) {
   const [currentComponentID, setCurrentComponentID] = useRecoilState(currentCartUpdateItemStage);
   const gHNAvailableServicesDTOs = useRecoilValueLoadable(getAvailableServicesQuery);
   const { enqueueSnackbar } = useSnackbar();
-  const setRefrshAble = useSetRecoilState(refrshAble);
   React.useEffect(() => {
     if (shoppingCart && currentComponentID === props.id) {
-      setRefrshAble(true);
       updateCart1(shoppingCart);
-
     }
     setCurrentComponentID("")
   }, [currentComponentID]);

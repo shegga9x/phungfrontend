@@ -103,15 +103,11 @@ export const cartSelector = selector<shoppingCartItemProps[]>({
   key: "cartSelector",
   get: async ({ get }) => {
     const isRefrshAble = get(refrshAble); // Get tab state
-    if (!isRefrshAble) {
-      return get(cartState); // Return previous state instead of fetching
-    }
     const user = get(currentUserState);
     const numericUserId = Number(user?.id); // Ensure it's a number
     if (!numericUserId) return []; // If userId is invalid, return empty
     const existingCart: shoppingCartItemProps[] = get(cartState);
-    if (existingCart.length > 0) return existingCart; // Return cached cart
-    // Fetch cart from API
+    if (!isRefrshAble && existingCart.length > 0) return existingCart;    // Fetch cart from API
     try {
       const response = await getCart(numericUserId);
       if (response.content) {
