@@ -104,7 +104,7 @@ export const cartSelector = selector<shoppingCartItemProps[]>({
   get: async ({ get }) => {
     const isRefrshAble = get(refrshAble); // Get tab state
     if (!isRefrshAble) {
-      return []; // Return previous state instead of fetching
+      return get(cartState); // Return previous state instead of fetching
     }
     const user = get(currentUserState);
     const numericUserId = Number(user?.id); // Ensure it's a number
