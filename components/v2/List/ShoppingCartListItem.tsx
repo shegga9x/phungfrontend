@@ -43,7 +43,6 @@ export default function ShoppingCartListItem(props: shoppingCartItemProps) {
     });
     updateCart(cartItemDTOs).then(() => {
       setLoadingStage(false);
-      setRefrshAble(false);
     })
       .catch(() => setLoadingStage(false));
   }

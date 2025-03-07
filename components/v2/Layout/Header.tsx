@@ -6,7 +6,7 @@ import {
   BookOpenIcon,
 } from '@heroicons/react/24/outline';
 import BookTypeMenu from '@/components/v2/Layout/BookTypeMenu';
-import { useRecoilState, useRecoilStateLoadable, useRecoilValue, useRecoilValueLoadable } from 'recoil';
+import { useRecoilState, useRecoilStateLoadable, useRecoilValue, useRecoilValueLoadable, useSetRecoilState } from 'recoil';
 import { calcCartItemSum } from '@/lib/utils';
 import AdminNav from '@/components/admin-nav';
 import ModeToggle from '@/components/ModeToggle';
@@ -14,7 +14,7 @@ import { UserNav } from '@/components/user-nav';
 import { Button } from "@mantine/core";
 import { useAuthGuard } from '@/lib/auth/use-auth';
 import { cartSelector, getCartQuery } from '@/selectors';
-import { cartState } from '@/atoms';
+import { cartState, refrshAble } from '@/atoms';
 
 export interface HeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   orientation?: "horizontal" | "vertical";
@@ -24,6 +24,7 @@ export interface HeaderProps extends React.HTMLAttributes<HTMLDivElement> {
 export default function Header({ className, ...props }: HeaderProps) {
   const { hideMenu } = props;
   const { user } = useAuthGuard({ middleware: "guest" });
+  const setRefrshAble = useSetRecoilState(refrshAble);
   const fetchedCart = useRecoilValueLoadable(cartSelector); // Fetch default if null
   return (
     <>
@@ -58,7 +59,7 @@ export default function Header({ className, ...props }: HeaderProps) {
             ) : (
               <>
                 {fetchedCart.state === 'hasValue' && fetchedCart.contents.length > 0 ? (
-                  <NextLink href='/cart' className='btn btn-ghost btn-circle'>
+                  < NextLink href='/cart' className='btn btn-ghost btn-circle'>
                     <div className='indicator'>
                       <ShoppingCartIcon className='w-6 h-6' />
                       <span className='badge badge-sm indicator-item'>
@@ -80,6 +81,7 @@ export default function Header({ className, ...props }: HeaderProps) {
                     </div>
                   </NextLink>
                 )}
+                {setRefrshAble(false)}
               </>
             )}
             <AdminNav />
