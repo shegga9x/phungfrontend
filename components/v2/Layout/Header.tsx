@@ -26,6 +26,9 @@ export default function Header({ className, ...props }: HeaderProps) {
   const { user } = useAuthGuard({ middleware: "guest" });
   const setRefrshAble = useSetRecoilState(refrshAble);
   const fetchedCart = useRecoilValueLoadable(cartSelector); // Fetch default if null
+  if (fetchedCart.state === 'hasValue' && fetchedCart.contents.length > 0) {
+    setRefrshAble(false);
+  }
   return (
     <>
       <div className='navbar bg-base-100 mx-auto max-w-7xl mt-4 shadow-xl rounded-box'>
@@ -81,7 +84,6 @@ export default function Header({ className, ...props }: HeaderProps) {
                     </div>
                   </NextLink>
                 )}
-                {setRefrshAble(false)}
               </>
             )}
             <AdminNav />
